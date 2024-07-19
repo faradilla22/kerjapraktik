@@ -15,7 +15,7 @@ class Bobot extends Model
      * @var array
      */
     protected $fillable = [
-         'nama_bobot', 
-         'nilai_bobot',
-    ];
+        'nama_bobot',
+        'nilai_bobot',
+   ];
 }
