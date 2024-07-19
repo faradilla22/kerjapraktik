@@ -19,15 +19,15 @@ return new class extends Migration
             $table->string('item_no');
             $table->string('item_name');
            
-            $table->integer('S');
-            $table->integer('L');
-            $table->integer('P');
-            $table->integer('E');
-            $table->integer('B');
-            $table->integer('H');
-            $table->integer('ECR');
-            $table->integer('R');
-            $table->integer('RR');
+            $table->float('S', 8, 2);
+            $table->float('L', 8, 2);
+            $table->float('P', 8, 2);
+            $table->float('E', 8, 2);
+            $table->float('B', 8, 2);
+            $table->float('H', 8, 2);
+            $table->float('ECR', 8, 2);
+            $table->float('R', 8, 2);
+            $table->float('RR', 8, 2);
 
             $table->unsignedBigInteger('id_pabrik');
             $table->unsignedBigInteger('id_bagian');

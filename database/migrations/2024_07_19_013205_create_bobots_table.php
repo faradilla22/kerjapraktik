@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bobots', function (Blueprint $table) {
             $table->id();
             $table->String('nama_bobot');
-            $table->decimal('nilai_bobot', 8, 2);
+            $table->float('nilai_bobot', 8, 2);
 
             $table->timestamps();
         });
