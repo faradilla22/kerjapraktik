@@ -15,10 +15,8 @@
                         <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>
-                                    
                                     <th scope="col">Nama Bobot</th>
                                     <th scope="col">Nilai Bobot</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>

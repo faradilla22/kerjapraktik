@@ -10,7 +10,6 @@ use Illuminate\Notifications\Notifiable;
 class Pengguna extends Authenticatable
 {
     use HasFactory;
-
     use Notifiable;
     /**
      * fillable
@@ -25,11 +24,17 @@ class Pengguna extends Authenticatable
 
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
     public function getAuthIdentifierName()
     {
         return 'username';
     }
+
+    //password encryption
+    // public function setPasswordAttribute($password)
+    // {
+    //     $this->attributes['password'] = bcrypt($password);
+    // }
 }

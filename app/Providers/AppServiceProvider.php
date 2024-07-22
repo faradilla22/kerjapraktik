@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $router = $this->app['router'];
+
+        // Register route-specific middleware
+        $router->aliasMiddleware('status', \App\Http\Middleware\StatusMiddleware::class);
     }
 }

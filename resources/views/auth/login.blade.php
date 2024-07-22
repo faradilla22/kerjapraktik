@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <form method="POST" action="/login">
-        @csrf
-        <div>
-            <label>Username</label>
-            <input type="text" name="username" required>
-        </div>
-        <div>
-            <label>Password</label>
-            <input type="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-</body>
-</html>
+@extends('layouts.apps')
+
+@section('content')
+<title>@section('title','Setting ECR')</title>
+
+<form method="POST" action="{{ route('login') }}">
+    @csrf
+    <div>
+        <label>Username</label>
+        <input type="text" name="username" required>
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+@endsection

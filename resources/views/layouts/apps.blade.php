@@ -19,7 +19,7 @@
     <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="background: lightgray">
+<body style="background: #F6F7F8">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -54,7 +54,8 @@
                             <li class="nav-item"><a class="nav-link link-dark small" href="#">ECR P2B</a></li>
                             <li class="nav-item"><a class="nav-link link-dark small" href="#">ECR P3</a></li>
                             <li class="nav-item"><a class="nav-link link-dark small" href="#">ECR P4</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark small" href="#">Setting ECR</a></li>
+                            <li class="nav-item"><a class="nav-link link-dark small" href="{{ route('bobots.index') }}">Setting ECR</a></li>
+                            <li class="nav-item"><a class="nav-link link-danger small" href="{{ route('login') }}">Logout</a></li>
                         </ul>
                     </div>
                 </nav>
