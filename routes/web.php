@@ -31,4 +31,4 @@ Route::get('/dashboard', function () {
 Route::post('/items/{id}/update', [newController::class, 'update']);
 Route::post('/items/store', [newController::class, 'store']);
 
-Route::get('/items/pabrik/{id_pabrik}/bagian/{id_bagian}', [newController::class, 'index_item2']);
+Route::get('/items/pabrik/{id_pabrik}/bagian/{id_bagian}', [newController::class, 'showItems']);

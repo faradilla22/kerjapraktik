@@ -97,5 +97,22 @@ class newController extends Controller
 
         return response()->json(['success' => true, 'barang' => $barang]);
     }
+
+    public function showItems($id_pabrik, $id_bagian)
+    {
+        // Mendapatkan bagian berdasarkan id_pabrik dan id_bagian
+        $bagian = Bagian::where('id_pabrik', $id_pabrik)
+                        ->where('id', $id_bagian)
+                        ->firstOrFail();
+        
+        // Mendapatkan item berdasarkan id_bagian
+        $items = Item::where('id_bagian', $id_bagian)->get();
+        $bobots = Bobot::latest()->paginate(10);
+
+        // Mendapatkan nama_pabrik
+        $pabrik = Pabrik::findOrFail($id_pabrik);
+
+        return view('item2.index', compact('items','bobots', 'bagian', 'pabrik'));
+    }
     
 }

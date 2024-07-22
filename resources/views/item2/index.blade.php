@@ -43,9 +43,11 @@
             <div class="col-md-12 row">
                 
                 <div>
-                    <h3 class="text-center my-4">Judul</h3>
+                    <h3 class="text-center my-4">Items in Amonia</h3>
                     <hr>
                 </div>
+
+                
 
                     <div class="col-md-2">
                     <nav id="sidebarMenu" class="d-md-block bg-light sidebar collapse">
@@ -57,6 +59,7 @@
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#0d6efd"  stroke-width="1.75"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-folders me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
                                     ECR Static Equipment
                                     </button></a>
+
                                     <div class="collapse" id="orders-collapse">
                                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                         <li><a href="#" class="link-secondary rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
@@ -75,10 +78,10 @@
                 </div>
                 <div class="col-md-10 card border-0 shadow-sm rounded">
                     
-                    
+                   
 
                     <div class="card-body table-responsive">
-                        <button class="btn btn-outline-primary active"{{-- data-id="{{ $bagian->id[1]}}" --}}>
+                        <button class="btn btn-outline-primary active">
                    {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
                              
                     <button class="btn btn-outline-primary"{{-- data-id="{{ $bagian->id[2]}}" --}}>
@@ -210,6 +213,7 @@
                         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+                      
                         <table class="table table-bordered table-sm w-70 " id="myTable">
                             <thead>
                                 <tr>
@@ -234,7 +238,9 @@
                                 </tr>
                             </thead>
                             <tbody id="itemTableBody">
-                                @forelse ($item as $items)
+                                @foreach ($item as $items) 
+                                @if ($items->id_pabrik==1 && $items->id_bagian==1 ) 
+            
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -355,13 +361,16 @@
 
                                        
                                     </tr>
-                                @empty
-                                    <div class="alert alert-danger">
+                                
+                                
+                                   {{--  <div class="alert alert-danger">
                                         Data Item belum Tersedia.
-                                    </div>
-                                @endforelse
+                                    </div> --}}
+                                @endif
+                            @endforeach
                             </tbody>
                         </table>
+                        
 
                         <script>
 
