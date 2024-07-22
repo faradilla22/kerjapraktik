@@ -32,9 +32,12 @@ class ItemController extends Controller
       
         //render view with products
         return view('item.index', compact('item','bobots'));
+        return view('item2.index', compact('item','bobots'));
+        
     }
 
-    public function updateEcrRr($id, Request $request)
+    
+    public function update($id, Request $request)
     {
         $item = Item::findOrFail($id);
         $item->ecr = $request->input('ecr');

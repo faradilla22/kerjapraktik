@@ -8,6 +8,33 @@
 
     <title>Datatable koordinator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .modal-body input, .modal-body textarea {
+            width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
+            margin-bottom: 15px; /* Memberi jarak antar elemen */
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group label {
+            flex: 1;
+            margin-bottom: 0; /* Menghilangkan margin bawah */
+        }
+        .form-group .input-group {
+            flex: 1;
+        }
+        .multiple-inputs .form-group {
+            flex: 1;
+        }
+        .multiple-inputs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px; /* Memberi jarak antar elemen */
+        }
+    </style>
+
 </head>
 <body style="background: lightgray">
 
@@ -50,8 +77,25 @@
                         </table>
                         {{ $bobots->links() }}
 
-                        <a href="#" class="btn btn-md btn-primary mb-3">History Report</a>
-                        <a href="#" class="btn btn-md btn-primary mb-3">Terbitkan Report</a>
+                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                        History Report
+                        </button>
+
+                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                        Terbitkan Report
+                        </button>
+                        
+                        
+                                        
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
                         <table class="table table-bordered table-sm w-70 " id="myTable">
                             <thead>

@@ -22,10 +22,10 @@ class Bagian extends Model
 
     // Relasi ke model pabrik
     public function pabrik() {
-        return $this->belongsTo(Pabrik::class);
+        return $this->belongsTo(Pabrik::class, 'id_pabrik');
     }
 
     public function barang() {
-        return $this->hasMany(Barang::class);
+        return $this->hasMany(Barang::class, 'id_bagian');
     }
 }

@@ -19,7 +19,7 @@ class Pabrik extends Model
     ];
 
     public function bagians() {
-        return $this->hasMany(Bagian::class);
+        return $this->hasMany(Bagian::class, 'id_pabrik');
     }
 
     public function barang() {
