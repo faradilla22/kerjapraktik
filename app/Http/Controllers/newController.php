@@ -38,8 +38,8 @@ class newController extends Controller
         //$penggunas = Pengguna::latest()->paginate(10);
 
        //render view with products
-       $a = 1;
-       $b = 1;
+      /*  $a = 1;
+       $b = 1; */
       
       //$a = $request->input('a', 1); // Default value jika tidak ada input
       //$b = $request->input('b', 1); // Default value jika tidak ada input
@@ -49,13 +49,13 @@ class newController extends Controller
      // session(['a' => $a, 'b' => $b]);
 
         //render view with products
-       return view('item2.index', compact('item','bobots','b','a'));
+       return view('item2.index', compact('item','bobots'));
        // return view('item2.index', compact('item','bobots','pabrik', 'bagian'));
 
     }
 
     public function updateValues(Request $request)
-{
+    {
     $a = $request->input('a', 1); // Default value jika tidak ada input
     $b = $request->input('b', 1); // Default value jika tidak ada input
 
@@ -100,25 +100,44 @@ class newController extends Controller
 
     // Method to store a new barang
     public function store(Request $request)
-    {
-        // Validasi data yang diterima
-        $validatedData = $request->validate([
-            'item_name' => 'required|string|max:255',
-            'item_no' => 'required|string|max:255',
-            'item_r' => 'required|numeric',
-            'item_s' => 'required|numeric',
-            'item_l' => 'required|numeric',
-            'item_p' => 'required|numeric',
-            'item_e' => 'required|numeric',
-            'item_b' => 'required|numeric',
-            'item_h' => 'required|numeric',
-        ]);
+{
+    // Validasi data yang diterima
+    $validatedData = $request->validate([
+        'item_name' => 'required|string|max:255',
+        'item_no' => 'required|string|max:255',
+        'item_r' => 'required|numeric',
+        'item_s' => 'required|numeric',
+        'item_l' => 'required|numeric',
+        'item_p' => 'required|numeric',
+        'item_e' => 'required|numeric',
+        'item_b' => 'required|numeric',
+        'item_h' => 'required|numeric',
+    ]);
 
-        // Buat dan simpan barang baru
-        $barang = Barang::create($validatedData);
+    // Ambil nilai $a dan $b dari session
+    $a = session('a', 1);
+    $b = session('b', 1);
 
-        return response()->json(['success' => true, 'barang' => $barang]);
-    }
+    // Ambil nilai bobot dari database
+    $bobots = Bobot::all();
+    $bobotArray = $bobots->pluck('nilai_bobot')->toArray();
+
+    // Hitung ECR
+    $itemData = [
+        'ecr' => ($validatedData['item_s'] * $bobotArray[0]) +
+                ($validatedData['item_l'] * $bobotArray[1]) +
+                ($validatedData['item_p'] * $bobotArray[2]) +
+                ($validatedData['item_e'] * $bobotArray[3]) +
+                ($validatedData['item_b'] * $bobotArray[4]) +
+                ($validatedData['item_h'] * $bobotArray[5]),
+        'rr' => 0, // Default value, you might want to calculate this if necessary
+    ];
+
+    // Simpan barang baru dengan ECR dan RR
+    $barang = Barang::create(array_merge($validatedData, $itemData));
+
+    return response()->json(['success' => true, 'barang' => $barang]);
+}
 
     public function showItems($id_pabrik, $id_bagian)
     {
@@ -136,5 +155,28 @@ class newController extends Controller
 
         return view('item2.index', compact('items','bobots', 'bagian', 'pabrik'));
     }
+
+    public function index_summary(){
+        $item = Barang::latest()->paginate(10);
+        
+         
+        $bobots = Bobot::latest()->paginate(10);
+        
+         //render view with products
+        return view('summary.index', compact('item','bobots'));
+    }
     
+
+    public function updateValues2(Request $request)
+    {
+    $c = $request->input('c', 1); // Default value jika tidak ada input
+    $d = $request->input('d', 1); // Default value jika tidak ada input
+
+    // Lakukan sesuatu dengan nilai $a dan $b, seperti menyimpannya dalam session atau mengolah data
+    // Misalnya, menyimpan dalam session:
+    session(['c' => $c, 'd' => $d]);
+
+    // Arahkan kembali ke halaman yang sesuai atau view dengan data baru
+    return redirect()->route('summary.index'); // Ganti 'your-route-name' dengan nama rute yang sesuai
+}
 }

@@ -72,7 +72,7 @@
 
                                     <div class="collapse" id="orders-collapse">
                                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
+                                        <li><a href="{{ route('summary.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 1 ? 'active' : '' }}" onclick="updateValues(1, {{ session('b', 1) }})">- ECR P1B</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
@@ -90,21 +90,21 @@
                     
                    
 
-                    <div class="card-body table-responsive">
-                        <button class="btn btn-outline-primary {{ session('b', 1) == 1 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 1)">
-                   {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
-                             
-                    <button class="btn btn-outline-primary {{ session('b', 1) == 2 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 2)">
-                    {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
-                    
-                    <button class="btn btn-outline-primary {{ session('b', 1) == 3 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 3)">
-                    {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
+                        <div class="card-body table-responsive">
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 1 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 1)">
+                            {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
+                                        
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 2 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 2)">
+                            {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
+                                
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 3 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 3)">
+                            {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
 
 
                     
 
-                        <p>Last Reported : </p>
-                    <table class="table table-bordered table-sm w-50 ">
+                            <p>Last Reported : </p>
+                            <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>
                                     
@@ -126,16 +126,16 @@
                                     </div>
                                 @endforelse
                             </tbody>
-                        </table>
-                        {{ $bobots->links() }}
+                            </table>
+                            {{ $bobots->links() }}
 
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                        History Report
-                        </button>
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                            History Report
+                            </button>
                         
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                        Tambah Item
-                        </button>
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                            Tambah Item
+                            </button>
 
                           <!-- Modal -->
                             <div class="modal fade" id="tambahItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -144,7 +144,7 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">Tambah Item</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
+                                                <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
 
@@ -494,32 +494,46 @@
                         </script>
 
                         <script>
-                        function submitAddItemForm() {
-                            const form = document.getElementById('addItemForm');
-                            const formData = new FormData(form);
+                            function submitAddItemForm() {
+                                const form = document.getElementById('addItemForm');
+                                const formData = new FormData(form);
+                                
+                                // Tambahkan nilai a dan b dari session
+                                const a = document.getElementById('input-a').value;
+                                const b = document.getElementById('input-b').value;
 
-                            fetch('/items/store', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                },
-                                body: JSON.stringify(Object.fromEntries(formData))
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success',
-                                        text: 'Item added successfully!',
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    }).then(() => {
-                                        $('#tambahItemModal').modal('hide');
-                                        // Optionally refresh table or perform other UI updates
-                                    });
-                                } else {
+                                fetch('/items/store', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify(Object.assign(Object.fromEntries(formData), { a: a, b: b }))
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item added and calculated successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
+                                            $('#tambahItemModal').modal('hide');
+                                            // Optionally refresh table or perform other UI updates
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while adding the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
@@ -527,19 +541,10 @@
                                         showConfirmButton: false,
                                         timer: 2000
                                     });
-                                }
-                            })
-                            .catch(error => {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'An error occurred while adding the item.',
-                                    showConfirmButton: false,
-                                    timer: 2000
                                 });
-                            });
-                        }
+                            }
                         </script>
+
 
 
                         <script>
