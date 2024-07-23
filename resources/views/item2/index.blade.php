@@ -38,6 +38,13 @@
 </head>
 <body style="background: lightgray">
 
+                                    <!-- Form untuk mengirim nilai ke server -->
+                                    <form id="values-form" method="GET" action="{{ route('update-values') }}">
+                                        @csrf
+                                        <input type="hidden" name="a" id="input-a" value="{{ session('a',1) }}">
+                                        <input type="hidden" name="b" id="input-b" value="{{ session('b',1) }}">
+                                    </form>
+
     <div class="container mt-2">
         <div class="row">
             <div class="col-md-12 row">
@@ -55,18 +62,21 @@
                             <ul class="nav flex-column">
     
                                 <li class="mb-1"> <a href="#" class="text-decoration-none">
-                                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                                    <button class="btn btn-outline-primary btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#0d6efd"  stroke-width="1.75"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-folders me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
                                     ECR Static Equipment
                                     </button></a>
 
+
+                                    
+
                                     <div class="collapse" id="orders-collapse">
                                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                        <li><a href="#" class="link-secondary rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
-                                        <li><a href="#" class="link-dark fw-bold rounded align-items-center text-decoration-none btn btn-toggle active">- ECR P1B</a></li>
-                                        <li><a href="#" class="link-secondary rounded align-items-center text-decoration-none btn btn-toggle">- ECR P2B</a></li>
-                                        <li><a href="#" class="link-secondary rounded align-items-center text-decoration-none btn btn-toggle">- ECR P3</a></li>
-                                        <li><a href="#" class="link-secondary rounded align-items-center text-decoration-none btn btn-toggle">- ECR P4</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 1 ? 'active' : '' }}" onclick="updateValues(1, {{ session('b', 1) }})">- ECR P1B</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
 
                                     </ul>
                                     </div>
@@ -81,14 +91,17 @@
                    
 
                     <div class="card-body table-responsive">
-                        <button class="btn btn-outline-primary active">
+                        <button class="btn btn-outline-primary {{ session('b', 1) == 1 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 1)">
                    {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
                              
-                    <button class="btn btn-outline-primary"{{-- data-id="{{ $bagian->id[2]}}" --}}>
+                    <button class="btn btn-outline-primary {{ session('b', 1) == 2 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 2)">
                     {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
                     
-                    <button class="btn btn-outline-primary"{{-- data-id="{{ $bagian->id[3]}}" --}}>
+                    <button class="btn btn-outline-primary {{ session('b', 1) == 3 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 3)">
                     {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
+
+
+                    
 
                         <p>Last Reported : </p>
                     <table class="table table-bordered table-sm w-50 ">
@@ -239,7 +252,7 @@
                             </thead>
                             <tbody id="itemTableBody">
                                 @foreach ($item as $items) 
-                                @if ($items->id_pabrik==1 && $items->id_bagian==1 ) 
+                                @if (/* $items->id_pabrik==$a && $items->id_bagian==$b */ $items->id_pabrik == session('a', 1) && $items->id_bagian == session('b', 1)) 
             
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
@@ -370,8 +383,15 @@
                             @endforeach
                             </tbody>
                         </table>
-                        
 
+                        
+                        <script>
+                            function updateValues(a, b) {
+                                document.getElementById('input-a').value = a;
+                                document.getElementById('input-b').value = b;
+                                document.getElementById('values-form').submit();
+                            }
+                        </script>
                         <script>
 
                         function calculateAndSave(itemId) {

@@ -38,12 +38,34 @@ class newController extends Controller
         //$penggunas = Pengguna::latest()->paginate(10);
 
        //render view with products
+       $a = 1;
+       $b = 1;
       
+      //$a = $request->input('a', 1); // Default value jika tidak ada input
+      //$b = $request->input('b', 1); // Default value jika tidak ada input
+   
+       // Lakukan sesuatu dengan nilai $a dan $b, seperti menyimpannya dalam session atau mengolah data
+       // Misalnya, menyimpan dalam session:
+     // session(['a' => $a, 'b' => $b]);
+
         //render view with products
-       return view('item2.index', compact('item','bobots'));
+       return view('item2.index', compact('item','bobots','b','a'));
        // return view('item2.index', compact('item','bobots','pabrik', 'bagian'));
 
     }
+
+    public function updateValues(Request $request)
+{
+    $a = $request->input('a', 1); // Default value jika tidak ada input
+    $b = $request->input('b', 1); // Default value jika tidak ada input
+
+    // Lakukan sesuatu dengan nilai $a dan $b, seperti menyimpannya dalam session atau mengolah data
+    // Misalnya, menyimpan dalam session:
+    session(['a' => $a, 'b' => $b]);
+
+    // Arahkan kembali ke halaman yang sesuai atau view dengan data baru
+    return redirect()->route('item2.index'); // Ganti 'your-route-name' dengan nama rute yang sesuai
+}
 
     public function update($id, Request $request)
     {
