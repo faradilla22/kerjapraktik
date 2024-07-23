@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.apps')
 
-    <title>Datatable koordinator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+@section('content')
+<head>
+<title>@section('title','Datatable Koordinator')</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -34,77 +29,30 @@
             margin-bottom: 15px; /* Memberi jarak antar elemen */
         }
     </style>
-
 </head>
-<body style="background: lightgray">
-
-                                    <!-- Form untuk mengirim nilai ke server -->
-                                    <form id="values-form" method="GET" action="{{ route('update-values') }}">
-                                        @csrf
-                                        <input type="hidden" name="a" id="input-a" value="{{ session('a',1) }}">
-                                        <input type="hidden" name="b" id="input-b" value="{{ session('b',1) }}">
-                                    </form>
 
     <div class="container mt-2">
         <div class="row">
             <div class="col-md-12 row">
                 
                 <div>
-                    <h3 class="text-center my-4">Items in Amonia</h3>
+                    <h3 class="text-center my-4">Judul</h3>
                     <hr>
                 </div>
 
-                
-
-                    <div class="col-md-2">
-                    <nav id="sidebarMenu" class="d-md-block bg-light sidebar collapse">
-                        <div class="position-sticky pt-3">
-                            <ul class="nav flex-column">
-    
-                                <li class="mb-1"> <a href="#" class="text-decoration-none">
-                                    <button class="btn btn-outline-primary btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#0d6efd"  stroke-width="1.75"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-folders me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
-                                    ECR Static Equipment
-                                    </button></a>
-
-
-                                    
-
-                                    <div class="collapse" id="orders-collapse">
-                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                        <li><a href="{{ route('summary.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
-                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 1 ? 'active' : '' }}" onclick="updateValues(1, {{ session('b', 1) }})">- ECR P1B</a></li>
-                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
-                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
-                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
-
-                                    </ul>
-                                    </div>
-                                </li>
-                               
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
                 <div class="col-md-10 card border-0 shadow-sm rounded">
+                    <div class="card-body table-responsive">
+                        <button class="btn btn-outline-primary active"{{-- data-id="{{ $bagian->id[1]}}" --}}>
+                   {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
+                             
+                    <button class="btn btn-outline-primary"{{-- data-id="{{ $bagian->id[2]}}" --}}>
+                    {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
                     
-                   
+                    <button class="btn btn-outline-primary"{{-- data-id="{{ $bagian->id[3]}}" --}}>
+                    {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
 
-                        <div class="card-body table-responsive">
-                            <button class="btn btn-outline-primary {{ session('b', 1) == 1 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 1)">
-                            {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
-                                        
-                            <button class="btn btn-outline-primary {{ session('b', 1) == 2 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 2)">
-                            {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
-                                
-                            <button class="btn btn-outline-primary {{ session('b', 1) == 3 ? 'active' : '' }}" onclick="updateValues({{ session('a', 1) }}, 3)">
-                            {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
-
-
-                    
-
-                            <p>Last Reported : </p>
-                            <table class="table table-bordered table-sm w-50 ">
+                        <p>Last Reported : </p>
+                    <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>
                                     
@@ -126,16 +74,16 @@
                                     </div>
                                 @endforelse
                             </tbody>
-                            </table>
-                            {{ $bobots->links() }}
+                        </table>
+                        {{ $bobots->links() }}
 
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                            History Report
-                            </button>
+                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                        History Report
+                        </button>
                         
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                            Tambah Item
-                            </button>
+                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                        Tambah Item
+                        </button>
 
                           <!-- Modal -->
                             <div class="modal fade" id="tambahItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -144,7 +92,7 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">Tambah Item</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
+                                            <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
 
@@ -226,7 +174,6 @@
                         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-                      
                         <table class="table table-bordered table-sm w-70 " id="myTable">
                             <thead>
                                 <tr>
@@ -251,9 +198,7 @@
                                 </tr>
                             </thead>
                             <tbody id="itemTableBody">
-                                @foreach ($item as $items) 
-                                @if (/* $items->id_pabrik==$a && $items->id_bagian==$b */ $items->id_pabrik == session('a', 1) && $items->id_bagian == session('b', 1)) 
-            
+                                @forelse ($item as $items)
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -374,24 +319,14 @@
 
                                        
                                     </tr>
-                                
-                                
-                                   {{--  <div class="alert alert-danger">
+                                @empty
+                                    <div class="alert alert-danger">
                                         Data Item belum Tersedia.
-                                    </div> --}}
-                                @endif
-                            @endforeach
+                                    </div>
+                                @endforelse
                             </tbody>
                         </table>
 
-                        
-                        <script>
-                            function updateValues(a, b) {
-                                document.getElementById('input-a').value = a;
-                                document.getElementById('input-b').value = b;
-                                document.getElementById('values-form').submit();
-                            }
-                        </script>
                         <script>
 
                         function calculateAndSave(itemId) {
@@ -437,7 +372,7 @@
                             //    const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
                             //    const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
                             //    const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
-//
+                            //
                                 // Calculate ECR
                             //    let ecr = 0;
                             //    document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
@@ -494,46 +429,32 @@
                         </script>
 
                         <script>
-                            function submitAddItemForm() {
-                                const form = document.getElementById('addItemForm');
-                                const formData = new FormData(form);
-                                
-                                // Tambahkan nilai a dan b dari session
-                                const a = document.getElementById('input-a').value;
-                                const b = document.getElementById('input-b').value;
+                        function submitAddItemForm() {
+                            const form = document.getElementById('addItemForm');
+                            const formData = new FormData(form);
 
-                                fetch('/items/store', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                    },
-                                    body: JSON.stringify(Object.assign(Object.fromEntries(formData), { a: a, b: b }))
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Success',
-                                            text: 'Item added and calculated successfully!',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        }).then(() => {
-                                            $('#tambahItemModal').modal('hide');
-                                            // Optionally refresh table or perform other UI updates
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Error',
-                                            text: 'An error occurred while adding the item.',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    }
-                                })
-                                .catch(error => {
+                            fetch('/items/store', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify(Object.fromEntries(formData))
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: 'Item added successfully!',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(() => {
+                                        $('#tambahItemModal').modal('hide');
+                                        // Optionally refresh table or perform other UI updates
+                                    });
+                                } else {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
@@ -541,10 +462,19 @@
                                         showConfirmButton: false,
                                         timer: 2000
                                     });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An error occurred while adding the item.',
+                                    showConfirmButton: false,
+                                    timer: 2000
                                 });
-                            }
+                            });
+                        }
                         </script>
-
 
 
                         <script>
@@ -587,5 +517,4 @@
 
     </script>
 
-</body>
-</html>
+@endsection

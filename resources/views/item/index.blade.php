@@ -1,43 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.apps')
 
-    <title>Datatable koordinator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .modal-body input, .modal-body textarea {
-            width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
-        .form-group label {
-            flex: 1;
-            margin-bottom: 0; /* Menghilangkan margin bawah */
-        }
-        .form-group .input-group {
-            flex: 1;
-        }
-        .multiple-inputs .form-group {
-            flex: 1;
-        }
-        .multiple-inputs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-    </style>
-
-</head>
-<body style="background: lightgray">
-
+@section('content')
+<title>@section('title','Datatable Engineer')</title>
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
@@ -52,7 +16,7 @@
 
                     <div class="card-body table-responsive">
                         <p>Last Reported : </p>
-                    <table class="table table-bordered table-sm w-50 ">
+                        <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>
                                     
@@ -84,19 +48,6 @@
                         <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
                         Terbitkan Report
                         </button>
-                        
-                        
-                                        
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
                         <table class="table table-bordered table-sm w-70 " id="myTable">
                             <thead>
                                 <tr>
@@ -121,7 +72,11 @@
                                 </tr>
                             </thead>
                             <tbody id="itemTableBody">
+                            <tbody id="itemTableBody">
                                 @forelse ($item as $items)
+                                    <tr data-id="{{ $items->id }}">
+                                        <td> </td>
+                                        <td>{{$items->updated_at}}</td>
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -135,12 +90,20 @@
                                         <td>{{ $items->B }}</td>
                                         <td>{{ $items->H }}</td>
                                         <td class="ecr-value">{{ $items->ECR }}</td>
+                                        <td class="ecr-value">{{ $items->ECR }}</td>
                                         <td>{{ $items->R }}</td>
+                                        <td class="rr-value">{{ $items->RR }}</td>
                                         <td class="rr-value">{{ $items->RR }}</td>
                                         <td>
                                         <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
+                                        <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
                                         <a href="#" class="btn btn-md btn-success mb-3">Approve</a>
                                         <a href="#" class="btn btn-md btn-danger mb-3">Reject</a>
+                                        
+                                        
+                                        <!-- <a href="#" class="btn btn-md btn-success mb-3">Edit/a>
+                                        <a href="#" class="btn btn-md btn-danger mb-3">Hapus</a> -->
+                                        
                                         
                                         
                                         <!-- <a href="#" class="btn btn-md btn-success mb-3">Edit/a>
@@ -227,16 +190,82 @@
                                 }
                             });
                         </script>
+
+                        <script>
+                            function calculateAndSave(itemId) {
+                                // Get the item row
+                                const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                                const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                                const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                                const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                                const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                                const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                                const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+                                const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
+
+                                // Calculate ECR
+                                let ecr = 0;
+                                document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                                    const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                                    ecr += (s * bobot) + (l * bobot) + (p * bobot) + (e * bobot) + (b * bobot) + (h * bobot);
+                                });
+
+                                // Calculate RR
+                                const rr = ecr * r;
+
+                                // Set the values in the table
+                                row.querySelector('.ecr-value').innerText = ecr.toFixed(2);
+                                row.querySelector('.rr-value').innerText = rr.toFixed(2);
+
+                                // Save the values to the database
+                                fetch(`/items/${itemId}/update`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        ecr: ecr,
+                                        rr: rr
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: 'ECR and RR values updated successfully!',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while updating the values.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            }
+                        </script>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+                                for (var i = 0; i < table.rows.length; i++) {
+                                    table.rows[i].cells[0].innerHTML = i + 1;
+                                }
+                            });
+                        </script>
                         {{ $item->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <script>
         //message with sweetalert
        /*  @if(session('success'))
@@ -259,5 +288,4 @@
 
     </script>
 
-</body>
-</html>
+@endsection
