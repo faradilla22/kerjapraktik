@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\KoordinatorController;
+use App\Http\Middleware\StatusMiddleware;
 use App\Http\Controllers\ItemController;
 
 Route::get('/', function () {
@@ -41,6 +43,11 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('koordinator/penggunas', [KoordinatorController::class, 'index'])->name('koordinator.penggunas');
+    Route::post('koordinator/penggunas/{pengguna}', [KoordinatorController::class, 'approve'])->name('koordinator.penggunas.approve');
+});
 
 // Common page for all users
 // Route::get('/bobots', function () {

@@ -16,15 +16,21 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+
         $credentials = $request->only('username', 'password');
 
-        $user = Pengguna::where('username', $credentials['username'])
-                        ->where('password', $credentials['password'])
-                        ->first();
-
-        if ($user) {
-        Auth::login($user);
-        return redirect()->intended('bobots');
+        // Retrieve the user based on username
+        $pengguna = Pengguna::where('username', $credentials['username'])->first();
+    
+        if ($pengguna && $pengguna->password === $credentials['password']) {
+            // Password matches, proceed with login
+            if ($pengguna->approved) {
+                Auth::login($pengguna);
+                return redirect()->intended('bobots');
+            } else {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Akun belum disetujui.');
+            }
         }
 
         //check encrypted password

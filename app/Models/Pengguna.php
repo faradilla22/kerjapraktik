@@ -20,6 +20,9 @@ class Pengguna extends Authenticatable
         'username', 
         'password',
         'status',
+        'approved',
+
+        'id_pabrik',
     ];
 
 
@@ -27,14 +30,23 @@ class Pengguna extends Authenticatable
         'password',
     ];
 
-    public function getAuthIdentifierName()
-    {
-        return 'username';
-    }
+    protected $casts = [
+        'approved' => 'boolean',
+    ];
+
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'username';
+    // }
 
     //password encryption
     // public function setPasswordAttribute($password)
     // {
     //     $this->attributes['password'] = bcrypt($password);
     // }
+
+    public function pabrik() {
+        return $this->belongsTo(Pabrik::class, 'id_pabrik');
+    }
+
 }

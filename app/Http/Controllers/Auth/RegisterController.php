@@ -19,17 +19,17 @@ class RegisterController extends Controller
         $request->validate([
             'username' => 'required|unique:penggunas',
             'password' => 'required|min:3|confirmed',
-            'status' => 'required|in:engineer,engineer koordinator',
+            'status' => 'required|in:engineer,koordinator',
+
         ]);
 
         $pengguna = Pengguna::create([
             'username' => $request->username,
             'password' => $request->password,
             'status' => $request->status,
+            'approved' => false,
         ]);
 
-        Auth::login($pengguna);
-
-        return redirect()->intended('bobots');
+        return redirect()->route('register')->with('status', 'Registration submitted! Wait for approval.');
     }
 }

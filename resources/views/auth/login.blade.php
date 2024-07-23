@@ -18,6 +18,7 @@
     <!-- Styles -->
     <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body style="background: #F6F7F8">
     <div>
@@ -34,11 +35,18 @@
                             <h2>Login</h2>
                         </div>
 
-                        @if ($errors->has('username'))
-                            <div class="alert alert-danger">
-                                {{ $errors->first('username') }}
+                        @if ($errors->any() || session('error'))
+                            <div class="alert alert-danger mt-3">
+                                <ul>
+                                    @if (session('error'))
+                                        <li>{{ session('error') }}</li>
+                                    @endif
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        @endif
+                        @endif            
 
                         <div class="card-body">
                             <form method="POST" action="{{ route('login') }}">
@@ -59,7 +67,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     
 </body>

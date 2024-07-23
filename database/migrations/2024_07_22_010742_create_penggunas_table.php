@@ -15,8 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('status', ['engineer', 'engineer koordinator']);
+            $table->boolean('approved')->default(false);
+            $table->enum('status', ['engineer', 'koordinator']);
             $table->timestamps();
+
+            $table->unsignedBigInteger('id_pabrik')->nullable();
+
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
         });
     }
 

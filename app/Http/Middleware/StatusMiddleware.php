@@ -23,4 +23,5 @@ class StatusMiddleware
 
         // Redirect or abort if the user doesn't have the correct status
         return redirect('/')->with('error', 'Unauthorized access');
-    }}
+    }
+}

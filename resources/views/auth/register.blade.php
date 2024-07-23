@@ -36,12 +36,18 @@
                         </div>
 
                         @if ($errors->any())
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger mt-3">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
                                 </ul>
+                            </div>
+                        @endif
+
+                        @if (session('status'))
+                            <div class="alert alert-success mt-3">
+                                {{ session('status') }}
                             </div>
                         @endif
 
@@ -64,7 +70,7 @@
                                     <label class="mb-1">Status</label>
                                     <select class="mb-3 form-select" name="status" required>
                                         <option value="engineer">Engineer</option>
-                                        <option value="engineer koordinator">Engineer Koordinator</option>
+                                        <option value="koordinator">Engineer Koordinator</option>
                                     </select>
                                 </div>
                                 <a class="text-secondary" href="{{ route('login') }}">Sudah punya akun?</a><br>

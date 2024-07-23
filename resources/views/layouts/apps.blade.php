@@ -89,6 +89,7 @@
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P3</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P4</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="{{ route('bobots.index') }}">Setting ECR</a></li>
+                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('koordinator.penggunas') }}">Moderasi Registrasi</a></li>
                             <li class="nav-item"><a class="nav-link link-danger" href="{{ route('login') }}">Logout</a></li>
                         </ul>
                     </div>
