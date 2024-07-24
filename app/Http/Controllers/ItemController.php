@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Bobot; 
-use App\Models\Barang;
 
 use Illuminate\Http\Request;
 use App\Models\Bobot; 

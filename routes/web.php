@@ -30,8 +30,6 @@ Route::post('/items/{id}/update', [newController::class, 'update']);
 Route::post('/items/store', [newController::class, 'store']);
 
 Route::get('/items/pabrik/{id_pabrik}/bagian/{id_bagian}', [newController::class, 'showItems']);
-
-
 Route::get('/update-values', [newController::class, 'updateValues'])->name('update-values');
 
 Route::get('/summary', [newController::class, 'index_summary'])->name('summary.index');
