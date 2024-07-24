@@ -44,12 +44,13 @@ Route::get('/update-values2', [newController::class, 'updateValues2'])->name('up
 Route::post('/items/{id}/update', [newController::class, 'update']);
 
 //Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2.update');
-Route::delete('/item2/{id}/delete', [newController::class, 'destroy'])->name('item2.delete');
+//Route::delete('/item2/{id}/delete', [newController::class, 'destroy'])->name('item2.delete');
 
 
 Route::get('/update-values3', [newController::class, 'updateValues3'])->name('update-values3');
 
 Route::get('/update-values4', [newController::class, 'updateValues4'])->name('update-values4');
 
-
+// routes/web.php
+Route::patch('/item2/{id}/change-status', [newController::class, 'changeStatus'])->name('item2.change-status');
 

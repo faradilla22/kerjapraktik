@@ -218,7 +218,7 @@ public function updateValues4(Request $request)
         return response()->json(['message' => 'Item updated successfully']);
     }
     
-    public function destroy($id)
+    /* public function destroy($id)
 {
     $item = Barang::find($id);
     if ($item) {
@@ -226,7 +226,7 @@ public function updateValues4(Request $request)
         return redirect()->route('item2.index')->with('success', 'Item deleted successfully');
     }
     return redirect()->route('item2.index')->with('error', 'Item not found');
-}
+} */
 
 public function update($id, Request $request)
 {
@@ -256,5 +256,14 @@ public function update($id, Request $request)
         \Log::error('Error updating barang', ['error' => $e->getMessage()]);
         return response()->json(['error' => 'An error occurred'], 500);
     }
+}
+
+public function changeStatus($id)
+{
+    $item = Barang::findOrFail($id);
+    $item->status = 'Deleted Need Review'; // Ubah status sesuai kebutuhan Anda
+    $item->save();
+
+    return redirect()->back()->with('success', 'Menunggu Aproval Koordinator.');
 }
 }

@@ -60,7 +60,6 @@
 
                 <div class="col-md-10 card border-0 shadow-sm rounded">
                     <div class="card-body table-responsive">
-                        <a href="#" class="btn btn-md btn-primary mb-3">Ubah Bobot</a>
                         <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>

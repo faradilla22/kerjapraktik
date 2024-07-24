@@ -96,7 +96,6 @@
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
-                                        <li><a href="{{ route('bobots.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Setting ECR</a></li>
 
                                     </ul>
                                     </div>
@@ -379,12 +378,17 @@
                                             </div>
                                         </div>
 
+                                       {{--  <button type="button" class="btn btn-danger delete-item-btn mb-3" data-toggle="modal" data-target="#deleteModal" data-id="{{ $items->id }}" data-name="{{ $items->item_name }}">
+                                            Hapus
+                                        </button> --}}
+
                                         <button type="button" class="btn btn-danger delete-item-btn mb-3" data-toggle="modal" data-target="#deleteModal" data-id="{{ $items->id }}" data-name="{{ $items->item_name }}">
                                             Hapus
                                         </button>
+                                        
 
                                        <!-- Delete Confirmation Modal -->
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -410,7 +414,36 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div> --}}
+
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Delete Equipment <span id="deleteItemName"></span></h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="deleteForm" method="POST">
+                                                            @csrf
+                                                            @method('PATCH') <!-- Gunakan metode PATCH untuk mengubah status -->
+                                                            <input type="hidden" name="item_id" id="deleteItemId">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" width="20px" height="20px" id="confirmDelete" required>
+                                                                <label class="form-check-label" for="confirmDelete">
+                                                                    Ubah status item ini menjadi "Deleted, Need Review
+                                                                </label>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        
 
 
                                         
@@ -777,7 +810,7 @@
 
 
 
-                        <script>
+                        {{-- <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
                             const deleteForm = document.getElementById('deleteForm');
@@ -800,7 +833,33 @@
                                 deleteForm.submit();
                             });
                         });
+                        </script> --}}
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                                const deleteForm = document.getElementById('deleteForm');
+                                const deleteItemName = document.getElementById('deleteItemName');
+                                const deleteItemId = document.getElementById('deleteItemId');
+                                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                        
+                                document.querySelectorAll('.delete-item-btn').forEach(button => {
+                                    button.addEventListener('click', function() {
+                                        const itemName = this.dataset.name;
+                                        const itemId = this.dataset.id;
+                                        deleteItemName.textContent = itemName;
+                                        deleteItemId.value = itemId;
+                                        deleteForm.action = `/item2/${itemId}/change-status`; // Sesuaikan dengan rute untuk mengubah status
+                                        deleteModal.show();
+                                    });
+                                });
+                        
+                                confirmDeleteBtn.addEventListener('click', function() {
+                                    deleteForm.submit();
+                                });
+                            });
                         </script>
+                        
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
