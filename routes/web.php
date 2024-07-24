@@ -29,6 +29,8 @@ Route::get('/dashboard', function () {
 })->middleware('auth');
 
 Route::get('/item2', [newController::class, 'index_item2'])->name('item2.index');
+Route::get('/item', [newController::class, 'index_item'])->name('item.index');
+
 
 Route::post('/items/store', [newController::class, 'store']);
 
@@ -43,4 +45,8 @@ Route::post('/items/{id}/update', [newController::class, 'update']);
 
 //Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2.update');
 Route::delete('/item2/{id}/delete', [newController::class, 'destroy'])->name('item2.delete');
+
+
+Route::get('/update-values3', [newController::class, 'updateValues3'])->name('update-values3');
+
 

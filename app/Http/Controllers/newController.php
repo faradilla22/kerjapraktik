@@ -68,6 +68,19 @@ class newController extends Controller
 }
 
     
+public function updateValues3(Request $request)
+    {
+    $a = $request->input('a', 1); // Default value jika tidak ada input
+    $b = $request->input('b', 1); // Default value jika tidak ada input
+
+    // Lakukan sesuatu dengan nilai $a dan $b, seperti menyimpannya dalam session atau mengolah data
+    // Misalnya, menyimpan dalam session:
+    session(['a' => $a, 'b' => $b]);
+
+    // Arahkan kembali ke halaman yang sesuai atau view dengan data baru
+    return redirect()->route('item.index'); // Ganti 'your-route-name' dengan nama rute yang sesuai
+}
+
 
 
     // Method to store a new barang

@@ -33,26 +33,97 @@
             justify-content: space-around;
             margin-bottom: 15px; /* Memberi jarak antar elemen */
         }
+
+        /* Optional: Custom styles for the modal */
+        .modal-header {
+            display: flex;
+            justify-content: center;
+            border-bottom: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            border-top: none;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 
 </head>
 <body style="background: lightgray">
 
-    <div class="container mt-5">
+                                    <!-- Form untuk mengirim nilai ke server -->
+                                    <form id="values-form" method="GET" action="{{ route('update-values3') }}">
+                                        @csrf
+                                        <input type="hidden" name="a" id="input-a" value="{{ session('a',1) }}">
+                                        <input type="hidden" name="b" id="input-b" value="{{ session('b',1) }}">
+                                    </form>
+
+    <div class="container mt-2">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 row">
+                
                 <div>
-                    <h3 class="text-center my-4">Judul</h3>
+                    <h3 class="text-center my-4">JUDUL</h3>
                     <hr>
                 </div>
-                <div class="card border-0 shadow-sm rounded">
+
+                
+
+                    <div class="col-md-2">
+                    <nav id="sidebarMenu" class="d-md-block bg-light sidebar collapse">
+                        <div class="position-sticky pt-3">
+                            <ul class="nav flex-column">
+    
+                                <li class="mb-1"> <a href="#" class="text-decoration-none">
+                                    <button class="btn btn-outline-primary btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#0d6efd"  stroke-width="1.75"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-folders me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
+                                    ECR Static Equipment
+                                    </button></a>
+
+
+                                    
+
+                                    <div class="collapse" id="orders-collapse">
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                        <li><a href="{{ route('summary.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Summary ECR</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 1 ? 'active' : '' }}" onclick="updateValues3(1, {{ session('b', 1) }})">- ECR P1B</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues3(2, {{ session('b', 1) }})">- ECR P2B</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues3(3, {{ session('b', 1) }})">- ECR P3</a></li>
+                                        <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues3(4, {{ session('b', 1) }})">- ECR P4</a></li>
+
+                                    </ul>
+                                    </div>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+                <div class="col-md-10 card border-0 shadow-sm rounded">
                     
+                   
+
+                        <div class="card-body table-responsive">
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 1 ? 'active' : '' }}" onclick="updateValues3({{ session('a', 1) }}, 1)">
+                            {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>
+                                        
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 2 ? 'active' : '' }}" onclick="updateValues3({{ session('a', 1) }}, 2)">
+                            {{-- {{ $bagian->nama_bagian }} --}} Urea</button>
+                                
+                            <button class="btn btn-outline-primary {{ session('b', 1) == 3 ? 'active' : '' }}" onclick="updateValues3({{ session('a', 1) }}, 3)">
+                            {{-- {{ $bagian->nama_bagian }} --}} Utility</button>
+
 
                     
 
-                    <div class="card-body table-responsive">
-                        <p>Last Reported : </p>
-                    <table class="table table-bordered table-sm w-50 ">
+                            <p>Last Reported : </p>
+                            <table class="table table-bordered table-sm w-50 ">
                             <thead>
                                 <tr>
                                     
@@ -74,29 +145,25 @@
                                     </div>
                                 @endforelse
                             </tbody>
-                        </table>
-                        {{ $bobots->links() }}
+                            </table>
+                            {{ $bobots->links() }}
 
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                        History Report
-                        </button>
-
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
-                        Terbitkan Report
-                        </button>
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#historyReport">
+                            History Report
+                            </button>
                         
-                        
-                                        
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#terbitkanReport">
+                            Terbitkan Report
+                            </button>
 
-                                    </div>
-                                </div>
-                            </div>
+                          
                         </div>
 
                         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
                         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+                      
                         <table class="table table-bordered table-sm w-70 " id="myTable">
                             <thead>
                                 <tr>
@@ -121,7 +188,9 @@
                                 </tr>
                             </thead>
                             <tbody id="itemTableBody">
-                                @forelse ($item as $items)
+                                @foreach ($item as $items) 
+                                @if (/* $items->id_pabrik==$a && $items->id_bagian==$b */ $items->id_pabrik == session('a', 1) && $items->id_bagian == session('b', 1)) 
+            
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -139,8 +208,23 @@
                                         <td class="rr-value">{{ $items->RR }}</td>
                                         <td>
                                         <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
-                                        <a href="#" class="btn btn-md btn-success mb-3">Approve</a>
-                                        <a href="#" class="btn btn-md btn-danger mb-3">Reject</a>
+                                        
+                                        <!-- Button to Open Edit Modal -->
+                                        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#approveItem" onclick="">
+                                            Approve
+                                        </button>
+
+                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" data-target="#approveItem" onclick="">
+                                            Reject
+                                        </button>
+
+                                        
+
+                                        
+
+                                        
+
+
                                         
                                         
                                         <!-- <a href="#" class="btn btn-md btn-success mb-3">Edit/a>
@@ -151,32 +235,63 @@
 
                                        
                                     </tr>
-                                @empty
-                                    <div class="alert alert-danger">
+                                
+                                
+                                   {{--  <div class="alert alert-danger">
                                         Data Item belum Tersedia.
-                                    </div>
-                                @endforelse
+                                    </div> --}}
+                                @endif
+                            @endforeach
                             </tbody>
                         </table>
 
+                        
                         <script>
-                            function calculateAndSave(itemId) {
-                                // Get the item row
-                                const row = document.querySelector(`tr[data-id="${itemId}"]`);
-                                const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
-                                const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
-                                const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
-                                const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
-                                const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
-                                const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
-                                const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
+                            function updateValues3(a, b) {
+                                document.getElementById('input-a').value = a;
+                                document.getElementById('input-b').value = b;
+                                document.getElementById('values-form').submit();
+                            }
+                        </script>
+                        {{-- <script>
 
-                                // Calculate ECR
-                                let ecr = 0;
-                                document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
-                                    const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
-                                    ecr += (s * bobot) + (l * bobot) + (p * bobot) + (e * bobot) + (b * bobot) + (h * bobot);
-                                });
+                        function calculateAndSave(itemId) {
+                            // Get the item row
+                            const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                            const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                            const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                            const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                            const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                            const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                            const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+
+                            // Array to store bobot values
+                            let bobotArray = [];
+
+                            // Get bobot values from the table
+                            document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                                const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                                bobotArray.push(bobot);
+                            });
+
+                            // Ensure the bobotArray has the correct number of elements
+                            if (bobotArray.length !== 6) {
+                                console.error('Bobot array does not have the correct number of elements.');
+                                return;
+                            }
+
+                            // Calculate ECR
+                            let ecr = (s * bobotArray[0]) + (l * bobotArray[1]) + (p * bobotArray[2]) + (e * bobotArray[3]) + (b * bobotArray[4]) + (h * bobotArray[5]);
+
+                            // Update ECR value in the row
+                            const ecrCell = row.querySelector('td:nth-child(12)');
+                            if (ecrCell) {
+                                ecrCell.innerText = ecr.toFixed(2); // Format to 2 decimal places
+                            }
+
+                            
+
+                                const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
 
                                 // Calculate RR
                                 const rr = ecr * r;
@@ -184,6 +299,11 @@
                                 // Set the values in the table
                                 row.querySelector('.ecr-value').innerText = ecr.toFixed(2);
                                 row.querySelector('.rr-value').innerText = rr.toFixed(2);
+
+                                console.log('Sending request to update values', {
+                                ecr: ecr,
+                                rr: rr
+                                });
 
                                 // Save the values to the database
                                 fetch(`/items/${itemId}/update`, {
@@ -217,7 +337,114 @@
                                     });
                                 });
                             }
+                        </script> --}}
+
+                    <script>
+                             
+
+                    function calculateAndSave(itemId) {
+                        // Get the item row
+                        const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                        const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                        const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                        const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                        const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                        const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                        const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+
+                        // Array to store bobot values
+                        let bobotArray = [];
+
+                        // Get bobot values from the table
+                        document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                            const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                            bobotArray.push(bobot);
+                        });
+
+                        // Ensure the bobotArray has the correct number of elements
+                        if (bobotArray.length !== 6) {
+                            console.error('Bobot array does not have the correct number of elements.');
+                            return;
+                        }
+
+                        // Calculate ECR
+                        let ecr = (s * bobotArray[0]) + (l * bobotArray[1]) + (p * bobotArray[2]) + (e * bobotArray[3]) + (b * bobotArray[4]) + (h * bobotArray[5]);
+
+                        // Update ECR value in the row
+                        const ecrCell = row.querySelector('td:nth-child(12)');
+                        if (ecrCell) {
+                            ecrCell.innerText = ecr.toFixed(2); // Format to 2 decimal places
+                        }
+
+                        //function calculateAndSave(itemId) {
+                        ////    // Get the item row
+                        //    const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                        //    const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                        //    const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                        //    const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                        //    const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                        //    const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                        //    const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+                    //
+                            // Calculate ECR
+                        //    let ecr = 0;
+                        //    document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                        //        const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                        //        ecr += (s * bobot) + (l * bobot) + (p * bobot) + (e * bobot) + (b * bobot) + (h * bobot);
+                        //    });
+
+                            const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
+
+                            // Calculate RR
+                            const rr = ecr * r;
+
+                            // Set the values in the table
+                            row.querySelector('.ecr-value').innerText = ecr.toFixed(2);
+                            row.querySelector('.rr-value').innerText = rr.toFixed(2);
+
+                            console.log('Sending request to update values', {
+                            ecr: ecr,
+                            rr: rr
+                            });
+
+                            // Save the values to the database
+                            fetch(`/items/${itemId}/update`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    ecr: ecr,
+                                    rr: rr
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'ECR and RR values updated successfully!',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An error occurred while updating the values.',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            });
+                        }
+
                         </script>
+
+                        
+
+
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
