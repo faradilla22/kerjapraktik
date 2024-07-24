@@ -32,7 +32,7 @@ Route::get('/item2', [newController::class, 'index_item2'])->name('item2.index')
 Route::get('/item', [newController::class, 'index_item'])->name('item.index');
 
 
-Route::post('/items/store', [newController::class, 'store']);
+//Route::post('/item2/store', [newController::class, 'store']);
 
 Route::get('/items/pabrik/{id_pabrik}/bagian/{id_bagian}', [newController::class, 'showItems']);
 
@@ -55,4 +55,9 @@ Route::get('/update-values4', [newController::class, 'updateValues4'])->name('up
 Route::patch('/item2/{id}/change-status', [newController::class, 'changeStatus'])->name('item2.change-status');
 
 Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2.update');
+//Route::post('/item2/store', [newController::class, 'store'])->name('item2.store');
 
+//Route::post('/item2/store', [newController::class, 'store'])->name('item2.store');
+Route::post('/item2/store', [newController::class, 'store'])->name('item2.store');
+
+Route::post('/item/{id}/approve', [newController::class, 'approve'])->name('item.approve');

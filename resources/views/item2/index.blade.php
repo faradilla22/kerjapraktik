@@ -64,6 +64,14 @@
                                         <input type="hidden" name="b" id="input-b" value="{{ session('b',1) }}">
                                     </form>
 
+
+                                    <form id="addItemForm">
+                                <input type="hidden" id="input-a" name="id_pabrik" value="{{ session('a', 1) }}">
+                                <input type="hidden" id="input-b" name="id_bagian" value="{{ session('b', 1) }}">
+                                <!-- Form fields for item details -->
+                                
+                                </form>
+
     <div class="container mt-2">
         <div class="row">
             <div class="col-md-12 row">
@@ -148,10 +156,14 @@
                             </table>
                             {{ $bobots->links() }}
 
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="">
                             History Report
                             </button>
                         
+
+                            
+                                                        
+
                             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
                             Tambah Item
                             </button>
@@ -431,7 +443,7 @@
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox" width="20px" height="20px" id="confirmDelete" required>
                                                                 <label class="form-check-label" for="confirmDelete">
-                                                                    Ubah status item ini menjadi "Deleted, Need Review
+                                                                    Saya yakin ingin menghapus ini
                                                                 </label>
                                                             </div>
                                                         </form>
@@ -663,7 +675,7 @@
 
                         </script>
 
-                        <script>
+                        {{-- <script>
                             function submitAddItemForm() {
                                 const form = document.getElementById('addItemForm');
                                 const formData = new FormData(form);
@@ -713,8 +725,61 @@
                                     });
                                 });
                             }
-                        </script>
+                        </script> --}}
 
+                        <script>
+                            function submitAddItemForm() {
+                                const form = document.getElementById('addItemForm');
+                                const formData = new FormData(form);
+                                
+                                // Tambahkan nilai a dan b dari session
+                                const a = document.getElementById('input-a').value;
+                                const b = document.getElementById('input-b').value;
+                            
+                                fetch('/item2/store', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify(Object.assign(Object.fromEntries(formData), { a: a, b: b }))
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item added and calculated successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
+                                            $('#tambahItemModal').modal('hide');
+                                            // Optionally refresh table or perform other UI updates
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while adding the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while adding the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            }
+                            </script>
+                            
+                        
 
 
                         {{-- <script>

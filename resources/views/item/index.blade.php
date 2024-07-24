@@ -211,11 +211,37 @@
                                         <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
                                         
                                         <!-- Button to Open Edit Modal -->
-                                        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#approveItem" onclick="">
+                                        <button type="button" class="btn btn-success mb-3" data-toggle="modal" onclick="openApproveModal({{ $items->id }}, '{{ $items->item_name }}')">
                                             Approve
                                         </button>
 
-                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" data-target="#approveItem" onclick="">
+                                        <!-- Modal HTML -->
+                                        <div class="modal fade" id="approveItemModal" tabindex="-1" aria-labelledby="approveItemModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="approveItemModalLabel">Approve Item</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Approve <span id="itemTitle"></span></p>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="approveCheck">
+                                                            <label class="form-check-label" for="approveCheck">Saya yakin ingin menyetujui ini</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" id="approveBtn" disabled>OK</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" data-target="#rejectItem" onclick="">
                                             Reject
                                         </button>
 
@@ -443,6 +469,140 @@
 
                         </script>
 
+                        
+
+
+                        {{-- <script>
+                            let selectedItemId;
+
+                            function openApproveModal(itemId, itemName) {
+                                selectedItemId = itemId;
+                                document.getElementById('itemTitle').innerText = itemName;
+                                document.getElementById('approveCheck').checked = false;
+                                document.getElementById('approveBtn').disabled = true;
+                                $('#approveItemModal').modal('show');
+                            }
+
+                            document.getElementById('approveCheck').addEventListener('change', function() {
+                                document.getElementById('approveBtn').disabled = !this.checked;
+                            });
+
+                            document.getElementById('approveBtn').addEventListener('click', function() {
+                                fetch(`/item/${selectedItemId}/approve`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        status: 'Approved'
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item approved successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while approving the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while approving the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            });
+                        </script> --}}
+
+                        <script>
+                            let selectedItemId;
+                        
+                            function openApproveModal(itemId, itemName) {
+                                selectedItemId = itemId;
+                                document.getElementById('itemTitle').innerText = itemName;
+                                document.getElementById('approveCheck').checked = false;
+                                document.getElementById('approveBtn').disabled = true;
+                                $('#approveItemModal').modal('show');
+                            }
+                        
+                            document.getElementById('approveCheck').addEventListener('change', function() {
+                                document.getElementById('approveBtn').disabled = !this.checked;
+                            });
+                        
+                            document.getElementById('approveBtn').addEventListener('click', function() {
+                                fetch(`/item/${selectedItemId}/approve`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        status: 'Approved'
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        if (data.deleted) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Deleted',
+                                                text: 'Item deleted successfully!',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            }).then(() => {
+                                                location.reload();
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Approved',
+                                                text: 'Item approved successfully!',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            }).then(() => {
+                                                location.reload();
+                                            });
+                                        }
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while processing the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while processing the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            });
+                        </script>
                         
 
 

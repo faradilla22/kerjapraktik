@@ -265,13 +265,13 @@ public function update($id, Request $request)
         'id' => $id,
         'item_name' => $request->input('item_name'),
         'item_no' => $request->input('item_no'),
-        'item_r' => $request->input('item_r'),
-        'item_s' => $request->input('item_s'),
-        'item_l' => $request->input('item_l'),
-        'item_p' => $request->input('item_p'),
-        'item_e' => $request->input('item_e'),
-        'item_b' => $request->input('item_b'),
-        'item_h' => $request->input('item_h')
+        'R' => $request->input('item_r'),
+        'S' => $request->input('item_s'),
+        'L' => $request->input('item_l'),
+        'P' => $request->input('item_p'),
+        'E' => $request->input('item_e'),
+        'B' => $request->input('item_b'),
+        'H' => $request->input('item_h')
     ]);
 
     try {
@@ -326,4 +326,74 @@ public function changeStatus($id)
 
     return redirect()->back()->with('success', 'Menunggu Aproval Koordinator.');
 }
+
+
+public function store(Request $request)
+{
+    // Validasi data yang diterima
+    $validatedData = $request->validate([
+        'item_name' => 'required|string|max:255',
+        'item_no' => 'required|string|max:255',
+        'item_r' => 'required|numeric',
+        'item_s' => 'required|numeric',
+        'item_l' => 'required|numeric',
+        'item_p' => 'required|numeric',
+        'item_e' => 'required|numeric',
+        'item_b' => 'required|numeric',
+        'item_h' => 'required|numeric',
+    ]);
+
+    // Ambil nilai $a dan $b dari session
+    $a = session('a', 1);
+    $b = session('b', 1);
+
+    // Ambil nilai bobot dari database
+    $bobots = Bobot::all();
+    $bobotArray = $bobots->pluck('nilai_bobot')->toArray();
+
+    // Hitung ECR
+    $ecr = ($validatedData['item_s'] * $bobotArray[0]) +
+           ($validatedData['item_l'] * $bobotArray[1]) +
+           ($validatedData['item_p'] * $bobotArray[2]) +
+           ($validatedData['item_e'] * $bobotArray[3]) +
+           ($validatedData['item_b'] * $bobotArray[4]) +
+           ($validatedData['item_h'] * $bobotArray[5]);
+
+    // Hitung RR (jika perlu, berdasarkan logika Anda)
+    $rr = $ecr * $validatedData['item_r'];
+
+    // Simpan barang baru dengan ECR dan RR
+    $barang = Barang::create(array_merge($validatedData, [
+        'id_pabrik' => $a,
+        'id_bagian' => $b,
+        'ECR' => $ecr,
+        'RR' => $rr,
+        'status' => 'Created Need Review',
+    ]));
+
+    return response()->json(['success' => true, 'barang' => $barang]);
+}
+
+public function approve($id, Request $request)
+{
+    /* $item = Barang::findOrFail($id);
+    $item->status = 'Approved';
+    $item->save();
+
+    return response()->json(['success' => true]); */
+    $item = Barang::findOrFail($id);
+
+    if ($item->status == 'Deleted Need Review') {
+        $item->delete();
+        return response()->json(['success' => true, 'deleted' => true]);
+    } else {
+        $item->status = 'Approved';
+        $item->save();
+        return response()->json(['success' => true, 'deleted' => false]);
+    }
+}
+
+
+
+
 }
