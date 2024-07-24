@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bobot; 
-
 use Illuminate\Http\Request;
-//import return type View
 use Illuminate\View\View;
 
 class BobotController extends Controller
@@ -22,9 +20,6 @@ class BobotController extends Controller
         $bobots = Bobot::latest()->paginate(10);
 
        //render view with products
-      
        return view('bobots.index', compact('bobots'));
-
-    }
-
+    }  
 }
