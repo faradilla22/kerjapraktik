@@ -54,3 +54,5 @@ Route::get('/update-values4', [newController::class, 'updateValues4'])->name('up
 // routes/web.php
 Route::patch('/item2/{id}/change-status', [newController::class, 'changeStatus'])->name('item2.change-status');
 
+Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2.update');
+

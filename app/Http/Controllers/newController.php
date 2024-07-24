@@ -228,7 +228,7 @@ public function updateValues4(Request $request)
     return redirect()->route('item2.index')->with('error', 'Item not found');
 } */
 
-public function update($id, Request $request)
+/* public function update($id, Request $request)
 {
     \Log::info('Update request received', [
         'id' => $id,
@@ -256,7 +256,67 @@ public function update($id, Request $request)
         \Log::error('Error updating barang', ['error' => $e->getMessage()]);
         return response()->json(['error' => 'An error occurred'], 500);
     }
+} */
+
+
+public function update($id, Request $request)
+{
+    \Log::info('Update request received', [
+        'id' => $id,
+        'item_name' => $request->input('item_name'),
+        'item_no' => $request->input('item_no'),
+        'item_r' => $request->input('item_r'),
+        'item_s' => $request->input('item_s'),
+        'item_l' => $request->input('item_l'),
+        'item_p' => $request->input('item_p'),
+        'item_e' => $request->input('item_e'),
+        'item_b' => $request->input('item_b'),
+        'item_h' => $request->input('item_h')
+    ]);
+
+    try {
+        $barang = Barang::findOrFail($id);
+
+        // Validasi input
+        $validatedData = $request->validate([
+            'item_name' => 'required|string|max:255',
+            'item_no' => 'required|string|max:255',
+            'item_r' => 'required|numeric',
+            'item_s' => 'required|numeric',
+            'item_l' => 'required|numeric',
+            'item_p' => 'required|numeric',
+            'item_e' => 'required|numeric',
+            'item_b' => 'required|numeric',
+            'item_h' => 'required|numeric'
+        ]);
+
+        // Hitung nilai ECR dan RR
+        $ecr = ($validatedData['item_s'] + $validatedData['item_l'] + $validatedData['item_p'] + $validatedData['item_e'] + $validatedData['item_b'] + $validatedData['item_h']) / 6;
+        $rr = $ecr / $validatedData['item_r'];
+
+        // Update data barang
+        $barang->item_name = $validatedData['item_name'];
+        $barang->item_no = $validatedData['item_no'];
+        $barang->r = $validatedData['item_r'];
+        $barang->s = $validatedData['item_s'];
+        $barang->l = $validatedData['item_l'];
+        $barang->p = $validatedData['item_p'];
+        $barang->e = $validatedData['item_e'];
+        $barang->b = $validatedData['item_b'];
+        $barang->h = $validatedData['item_h'];
+        $barang->ecr = $ecr;
+        $barang->rr = $rr;
+        $barang->status = 'Modified Need Review';
+        $barang->save();
+
+        return response()->json(['success' => true]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error updating barang', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'An error occurred'], 500);
+    }
 }
+
 
 public function changeStatus($id)
 {

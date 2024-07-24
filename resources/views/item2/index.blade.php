@@ -307,7 +307,6 @@
                                                         </button>
                                                     </div>
                                                     <form id="editItemForm">
-                                                       
                                                         <div class="modal-body">
                                                             <input type="hidden" id="editItemId" name="item_id">
                                                             <div class="form-group">
@@ -377,6 +376,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
 
                                        {{--  <button type="button" class="btn btn-danger delete-item-btn mb-3" data-toggle="modal" data-target="#deleteModal" data-id="{{ $items->id }}" data-name="{{ $items->item_name }}">
                                             Hapus
@@ -717,7 +717,7 @@
 
 
 
-                        <script>
+                        {{-- <script>
                             // Fungsi untuk memuat data item ke dalam modal
                             function loadEditItemData(itemId) {
                                 // Ambil baris item berdasarkan ID
@@ -806,8 +806,111 @@
                                     });
                                 });
                             }
-                        </script>
+                        </script> --}}
 
+
+
+                        <script>
+                            // Fungsi untuk memuat data item ke dalam modal
+                            function loadEditItemData(itemId) {
+                                // Ambil baris item berdasarkan ID
+                                const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                        
+                                // Ambil data dari baris
+                                const itemName = row.querySelector('td:nth-child(5)').innerText;
+                                const itemNo = row.querySelector('td:nth-child(4)').innerText;
+                                const r = row.querySelector('td:nth-child(13)').innerText;
+                                const s = row.querySelector('td:nth-child(6)').innerText;
+                                const l = row.querySelector('td:nth-child(7)').innerText;
+                                const p = row.querySelector('td:nth-child(8)').innerText;
+                                const e = row.querySelector('td:nth-child(9)').innerText;
+                                const b = row.querySelector('td:nth-child(10)').innerText;
+                                const h = row.querySelector('td:nth-child(11)').innerText;
+                        
+                                // Isi data ke dalam form modal
+                                document.getElementById('editItemId').value = itemId;
+                                document.getElementById('editItemName').value = itemName;
+                                document.getElementById('editItemNo').value = itemNo;
+                                document.getElementById('editItemR').value = r;
+                                document.getElementById('editItemS').value = s;
+                                document.getElementById('editItemL').value = l;
+                                document.getElementById('editItemP').value = p;
+                                document.getElementById('editItemE').value = e;
+                                document.getElementById('editItemB').value = b;
+                                document.getElementById('editItemH').value = h;
+                            }
+                        
+                            // Fungsi untuk mengirim data yang telah diedit
+                            function submitEditItemForm() {
+                                // Ambil data dari form
+                                const itemId = document.getElementById('editItemId').value;
+                                const itemName = document.getElementById('editItemName').value;
+                                const itemNo = document.getElementById('editItemNo').value;
+                                const itemR = document.getElementById('editItemR').value;
+                                const itemS = document.getElementById('editItemS').value;
+                                const itemL = document.getElementById('editItemL').value;
+                                const itemP = document.getElementById('editItemP').value;
+                                const itemE = document.getElementById('editItemE').value;
+                                const itemB = document.getElementById('editItemB').value;
+                                const itemH = document.getElementById('editItemH').value;
+                        
+                                // Kirim data ke server
+                                fetch(`/item2/${itemId}/update`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        item_name: itemName,
+                                        item_no: itemNo,
+                                        item_r: itemR,
+                                        item_s: itemS,
+                                        item_l: itemL,
+                                        item_p: itemP,
+                                        item_e: itemE,
+                                        item_b: itemB,
+                                        item_h: itemH
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item updated successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                        
+                                        // Tutup modal
+                                        $('#editItemModal').modal('hide');
+                        
+                                        // Perbarui data di tabel jika perlu
+                                        // Misalnya, dengan memuat ulang tabel atau memperbarui baris yang relevan
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while updating the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while updating the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            }
+                        </script>
+                        
 
 
                         {{-- <script>
