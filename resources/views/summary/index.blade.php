@@ -43,10 +43,41 @@
         } */
 
         /* Atur ukuran canvas menggunakan CSS */
+        .chart-legend-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto; /* memusatkan container jika lebar lebih kecil dari lebar tampilan */
+            padding: 20px; /* memberi padding agar elemen tidak menempel pada tepi container */
+            width: auto;
+        }
+
+
+
         .chart-container {
-            width: 400px;
-            height: 400px;
+            width: 40%;
+            height: auto;
             display: inline-block;
+            justify-content: center;
+            align-items: center;
+        }
+        .color-legend {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 20%;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 
@@ -149,16 +180,29 @@
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
                        <!-- Dua canvas untuk dua chart -->
-                       <div class="row">
-                        <div class="chart-container">
-                            <canvas id="ecrPieChart"></canvas>
+                       <center>
+                       <div>
+                       <div class="chart-legend-container row mb-4">
+                            <div class="chart-container">
+                                <h5 class="text-center">ECR</h5>
+                                <br>
+                                <canvas id="ecrPieChart"></canvas>
+                            </div>
+                            <div class="color-legend" id="ecrColorLegend"></div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="rrPieChart"></canvas>
+                        
+                        <div class="chart-legend-container row mb-4">
+                            <div class="chart-container">
+                                <h5 class="text-center">RR</h5>
+                                <br>
+                                <canvas id="rrPieChart"></canvas>
+                            </div>
+                            <div class="color-legend" id="rrColorLegend"></div>
                         </div>
-                    </div>
+                        </div>
+                    </center>
                       
-                        <table class="table table-bordered table-sm w-70 mt-2" id="myTable">
+                        <table class="table table-bordered table-sm w-70 mt-2 mb-5" id="myTable">
                             <thead>
                                 <tr>
                                 <th scope="col">No.</th>
@@ -209,6 +253,28 @@
                             @endforeach
                             </tbody>
                         </table>
+
+                        <ul type="none">
+                            <h6>Legend:</h6>
+                            <li>
+                                <p>- S = Safety</p>
+                            </li>
+                            <li>
+                                <p>- L = Lingkungan</p>
+                            </li>
+                            <li>
+                                <p>- P = Produksi</p>
+                            </li>
+                            <li>
+                                <p>- E = Elemen Biaya Operasi</p>
+                            </li>
+                            <li>
+                                <p>- B = Elemen Biaya Perbaikan</p>
+                            </li>
+                            <li>
+                                <p>- H = Kegagalan Tersembunyi</p>
+                            </li>
+                        </ul>
 
                         
                         <script>
@@ -384,7 +450,110 @@
 
 
                         <script>
-                            document.addEventListener('DOMContentLoaded', function () {
+                              document.addEventListener('DOMContentLoaded', function () {
+                                var ecrValues = [];
+                                var rrValues = [];
+                                var labels = [];
+
+                                document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
+                                    var ecrValue = row.querySelector('.ecr-value').textContent;
+                                    var rrValue = row.querySelector('.rr-value').textContent;
+                                    var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
+                                    ecrValues.push(ecrValue);
+                                    rrValues.push(rrValue);
+                                    labels.push(itemName);
+                                });
+
+                                var colors = [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ];
+
+                                function createLegend(colorLegendElement, labels, colors) {
+                                    labels.forEach((label, index) => {
+                                        var legendItem = document.createElement('div');
+                                        legendItem.classList.add('legend-item');
+
+                                        var colorBox = document.createElement('div');
+                                        colorBox.classList.add('legend-color');
+                                        colorBox.style.backgroundColor = colors[index];
+
+                                        var labelText = document.createElement('span');
+                                        labelText.textContent = label;
+
+                                        legendItem.appendChild(colorBox);
+                                        legendItem.appendChild(labelText);
+                                        colorLegendElement.appendChild(legendItem);
+                                    });
+                                }
+
+                                var ctxEcr = document.getElementById('ecrPieChart').getContext('2d');
+                                var ecrPieChart = new Chart(ctxEcr, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            label: 'ECR',
+                                            data: ecrValues,
+                                            backgroundColor: colors,
+                                            borderColor: colors.map(color => color.replace('0.2', '1')),
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (tooltipItem) {
+                                                        return labels[tooltipItem.dataIndex] + ': ' + ecrValues[tooltipItem.dataIndex];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                createLegend(document.getElementById('ecrColorLegend'), labels, colors);
+
+                                var ctxRr = document.getElementById('rrPieChart').getContext('2d');
+                                var rrPieChart = new Chart(ctxRr, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            label: 'RR',
+                                            data: rrValues,
+                                            backgroundColor: colors,
+                                            borderColor: colors.map(color => color.replace('0.2', '1')),
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (tooltipItem) {
+                                                        return labels[tooltipItem.dataIndex] + ': ' + rrValues[tooltipItem.dataIndex];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                createLegend(document.getElementById('rrColorLegend'), labels, colors);
+                            });
+                           /*  document.addEventListener('DOMContentLoaded', function () {
                                 var ecrValues = [];
                                 var rrValues = [];
                                 var labels = [];
@@ -486,7 +655,7 @@
                                         }
                                     }
                                 });
-                            });
+                            }); */
                         </script>
 
                         <script>
