@@ -33,6 +33,25 @@
             justify-content: space-around;
             margin-bottom: 15px; /* Memberi jarak antar elemen */
         }
+
+        /* Optional: Custom styles for the modal */
+        .modal-header {
+            display: flex;
+            justify-content: center;
+            border-bottom: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            border-top: none;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 
 </head>
@@ -50,7 +69,7 @@
             <div class="col-md-12 row">
                 
                 <div>
-                    <h3 class="text-center my-4">Items in Amonia</h3>
+                    <h3 class="text-center my-4">JUDUL</h3>
                     <hr>
                 </div>
 
@@ -273,7 +292,7 @@
                                         <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
                                         
                                         <!-- Button to Open Edit Modal -->
-                                        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#editItemModal" onclick="loadEditItemData(itemId)">
+                                        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#editItemModal" onclick="loadEditItemData({{ $items->id }})">
                                             Edit
                                         </button>
 
@@ -359,9 +378,38 @@
                                             </div>
                                         </div>
 
-                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" data-target="#hapusItemModal">
-                                        Hapus
+                                        <button type="button" class="btn btn-danger delete-item-btn mb-3" data-toggle="modal" data-target="#deleteModal" data-id="{{ $items->id }}" data-name="{{ $items->item_name }}">
+                                            Hapus
                                         </button>
+
+                                       <!-- Delete Confirmation Modal -->
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Hapus <span id="deleteItemName"></span></h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="deleteForm" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="hidden" name="item_id" id="deleteItemId">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" width="20px" height="20px" id="confirmDelete" required>
+                                                                <label class="form-check-label" for="confirmDelete">
+                                                                    Saya yakin ingin menghapus ini
+                                                                </label>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                                         
@@ -392,7 +440,7 @@
                                 document.getElementById('values-form').submit();
                             }
                         </script>
-                        <script>
+                        {{-- <script>
 
                         function calculateAndSave(itemId) {
                             // Get the item row
@@ -428,22 +476,7 @@
                                 ecrCell.innerText = ecr.toFixed(2); // Format to 2 decimal places
                             }
 
-                            //function calculateAndSave(itemId) {
-                            ////    // Get the item row
-                            //    const row = document.querySelector(`tr[data-id="${itemId}"]`);
-                            //    const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
-                            //    const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
-                            //    const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
-                            //    const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
-                            //    const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
-                            //    const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
-//
-                                // Calculate ECR
-                            //    let ecr = 0;
-                            //    document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
-                            //        const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
-                            //        ecr += (s * bobot) + (l * bobot) + (p * bobot) + (e * bobot) + (b * bobot) + (h * bobot);
-                            //    });
+                            
 
                                 const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
 
@@ -491,6 +524,109 @@
                                     });
                                 });
                             }
+                        </script> --}}
+
+                    <script>
+                             
+
+                    function calculateAndSave(itemId) {
+                        // Get the item row
+                        const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                        const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                        const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                        const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                        const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                        const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                        const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+
+                        // Array to store bobot values
+                        let bobotArray = [];
+
+                        // Get bobot values from the table
+                        document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                            const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                            bobotArray.push(bobot);
+                        });
+
+                        // Ensure the bobotArray has the correct number of elements
+                        if (bobotArray.length !== 6) {
+                            console.error('Bobot array does not have the correct number of elements.');
+                            return;
+                        }
+
+                        // Calculate ECR
+                        let ecr = (s * bobotArray[0]) + (l * bobotArray[1]) + (p * bobotArray[2]) + (e * bobotArray[3]) + (b * bobotArray[4]) + (h * bobotArray[5]);
+
+                        // Update ECR value in the row
+                        const ecrCell = row.querySelector('td:nth-child(12)');
+                        if (ecrCell) {
+                            ecrCell.innerText = ecr.toFixed(2); // Format to 2 decimal places
+                        }
+
+                        //function calculateAndSave(itemId) {
+                        ////    // Get the item row
+                        //    const row = document.querySelector(`tr[data-id="${itemId}"]`);
+                        //    const s = parseFloat(row.querySelector('td:nth-child(6)').innerText);
+                        //    const l = parseFloat(row.querySelector('td:nth-child(7)').innerText);
+                        //    const p = parseFloat(row.querySelector('td:nth-child(8)').innerText);
+                        //    const e = parseFloat(row.querySelector('td:nth-child(9)').innerText);
+                        //    const b = parseFloat(row.querySelector('td:nth-child(10)').innerText);
+                        //    const h = parseFloat(row.querySelector('td:nth-child(11)').innerText);
+                    //
+                            // Calculate ECR
+                        //    let ecr = 0;
+                        //    document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                        //        const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                        //        ecr += (s * bobot) + (l * bobot) + (p * bobot) + (e * bobot) + (b * bobot) + (h * bobot);
+                        //    });
+
+                            const r = parseFloat(row.querySelector('td:nth-child(13)').innerText);
+
+                            // Calculate RR
+                            const rr = ecr * r;
+
+                            // Set the values in the table
+                            row.querySelector('.ecr-value').innerText = ecr.toFixed(2);
+                            row.querySelector('.rr-value').innerText = rr.toFixed(2);
+
+                            console.log('Sending request to update values', {
+                            ecr: ecr,
+                            rr: rr
+                            });
+
+                            // Save the values to the database
+                            fetch(`/items/${itemId}/update`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    ecr: ecr,
+                                    rr: rr
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'ECR and RR values updated successfully!',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An error occurred while updating the values.',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            });
+                        }
+
                         </script>
 
                         <script>
@@ -546,6 +682,124 @@
                         </script>
 
 
+
+                        <script>
+                            // Fungsi untuk memuat data item ke dalam modal
+                            function loadEditItemData(itemId) {
+                                // Ambil baris item berdasarkan ID
+                                const row = document.querySelector(`tr[data-id="${itemId}"]`);
+
+                                // Ambil data dari baris
+                                const itemName = row.querySelector('td:nth-child(5)').innerText;
+                                const itemNo = row.querySelector('td:nth-child(4)').innerText;
+                                const r = row.querySelector('td:nth-child(13)').innerText;
+                                const s = row.querySelector('td:nth-child(6)').innerText;
+                                const l = row.querySelector('td:nth-child(7)').innerText;
+                                const p = row.querySelector('td:nth-child(8)').innerText;
+                                const e = row.querySelector('td:nth-child(9)').innerText;
+                                const b = row.querySelector('td:nth-child(10)').innerText;
+                                const h = row.querySelector('td:nth-child(11)').innerText;
+
+                                // Isi data ke dalam form modal
+                                document.getElementById('editItemId').value = itemId;
+                                document.getElementById('editItemName').value = itemName;
+                                document.getElementById('editItemNo').value = itemNo;
+                                document.getElementById('editItemR').value = r;
+                                document.getElementById('editItemS').value = s;
+                                document.getElementById('editItemL').value = l;
+                                document.getElementById('editItemP').value = p;
+                                document.getElementById('editItemE').value = e;
+                                document.getElementById('editItemB').value = b;
+                                document.getElementById('editItemH').value = h;
+                            }
+
+                            // Fungsi untuk mengirim data yang telah diedit
+                            function submitEditItemForm() {
+                                // Ambil data dari form
+                                const itemId = document.getElementById('editItemId').value;
+                                const itemName = document.getElementById('editItemName').value;
+                                const itemNo = document.getElementById('editItemNo').value;
+                                const itemR = document.getElementById('editItemR').value;
+                                const itemS = document.getElementById('editItemS').value;
+                                const itemL = document.getElementById('editItemL').value;
+                                const itemP = document.getElementById('editItemP').value;
+                                const itemE = document.getElementById('editItemE').value;
+                                const itemB = document.getElementById('editItemB').value;
+                                const itemH = document.getElementById('editItemH').value;
+
+                                // Kirim data ke server
+                                fetch(`/item2/${itemId}/update`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        item_name: itemName,
+                                        item_no: itemNo,
+                                        item_r: itemR,
+                                        item_s: itemS,
+                                        item_l: itemL,
+                                        item_p: itemP,
+                                        item_e: itemE,
+                                        item_b: itemB,
+                                        item_h: itemH
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: 'Item updated successfully!',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+
+                                    // Tutup modal
+                                    $('#editItemModal').modal('hide');
+
+                                    // Perbarui data di tabel jika perlu
+                                    // Misalnya, dengan memuat ulang tabel atau memperbarui baris yang relevan
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while updating the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            }
+                        </script>
+
+
+
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                            const deleteForm = document.getElementById('deleteForm');
+                            const deleteItemName = document.getElementById('deleteItemName');
+                            const deleteItemId = document.getElementById('deleteItemId');
+                            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+                            document.querySelectorAll('.delete-item-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const itemName = this.dataset.name;
+                                    const itemId = this.dataset.id;
+                                    deleteItemName.textContent = itemName;
+                                    deleteItemId.value = itemId;
+                                    deleteForm.action = `/item2/${itemId}/delete`; // Sesuaikan dengan rute delete kamu
+                                    deleteModal.show();
+                                });
+                            });
+
+                            confirmDeleteBtn.addEventListener('click', function() {
+                                deleteForm.submit();
+                            });
+                        });
+                        </script>
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {

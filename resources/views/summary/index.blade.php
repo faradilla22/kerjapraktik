@@ -180,7 +180,7 @@
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
                        <!-- Dua canvas untuk dua chart -->
-                       <center>
+                       
                        <div>
                        <div class="chart-legend-container row mb-4">
                             <div class="chart-container">
@@ -200,7 +200,7 @@
                             <div class="color-legend" id="rrColorLegend"></div>
                         </div>
                         </div>
-                    </center>
+                    
                       
                         <table class="table table-bordered table-sm w-70 mt-2 mb-5" id="myTable">
                             <thead>

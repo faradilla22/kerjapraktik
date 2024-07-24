@@ -67,39 +67,11 @@ class newController extends Controller
     return redirect()->route('item2.index'); // Ganti 'your-route-name' dengan nama rute yang sesuai
 }
 
-    public function update($id, Request $request)
-    {
-        \Log::info('Update request received', [
-            'id' => $id,
-            'ecr' => $request->input('ecr'),
-            'rr' => $request->input('rr')
-        ]);
     
-        try {
-            $barang = Barang::findOrFail($id);
-    
-            // Validasi input
-            $validatedData = $request->validate([
-                'ecr' => 'required',
-                'rr' => 'required',
-            ]);
-    
-            // Update kolom ecr dan rr
-            $barang->ecr = $validatedData['ecr'];
-            $barang->rr = $validatedData['rr'];
-            $barang->save();
-    
-            return response()->json(['success' => true]);
-    
-        } catch (\Exception $e) {
-            \Log::error('Error updating barang', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'An error occurred'], 500);
-        }
-    }
 
 
     // Method to store a new barang
-    public function store(Request $request)
+   /*  public function store(Request $request)
 {
     // Validasi data yang diterima
     $validatedData = $request->validate([
@@ -137,7 +109,7 @@ class newController extends Controller
     $barang = Barang::create(array_merge($validatedData, $itemData));
 
     return response()->json(['success' => true, 'barang' => $barang]);
-}
+} */
 
     public function showItems($id_pabrik, $id_bagian)
     {
@@ -178,5 +150,86 @@ class newController extends Controller
 
     // Arahkan kembali ke halaman yang sesuai atau view dengan data baru
     return redirect()->route('summary.index'); // Ganti 'your-route-name' dengan nama rute yang sesuai
+}
+
+
+
+    // Menampilkan form edit atau memproses permintaan update
+    public function update2(Request $request, $id)
+    {
+        // Validasi input data jika perlu
+        $validated = $request->validate([
+            'item_name' => 'required|string|max:255',
+            'item_no' => 'required|string|max:255',
+            'item_r' => 'required|numeric',
+            'item_s' => 'required|numeric',
+            'item_l' => 'required|numeric',
+            'item_p' => 'required|numeric',
+            'item_e' => 'required|numeric',
+            'item_b' => 'required|numeric',
+            'item_h' => 'required|numeric',
+        ]);
+
+        // Cari item berdasarkan ID
+        $item = Item::find($id);
+
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404);
+        }
+
+        // Update data item
+        $item->update([
+            'item_name' => $validated['item_name'],
+            'item_no' => $validated['item_no'],
+            'R' => $validated['item_r'],
+            'S' => $validated['item_s'],
+            'L' => $validated['item_l'],
+            'P' => $validated['item_p'],
+            'E' => $validated['item_e'],
+            'B' => $validated['item_b'],
+            'H' => $validated['item_h'],
+        ]);
+
+        return response()->json(['message' => 'Item updated successfully']);
+    }
+    
+    public function destroy($id)
+{
+    $item = Barang::find($id);
+    if ($item) {
+        $item->delete();
+        return redirect()->route('item2.index')->with('success', 'Item deleted successfully');
+    }
+    return redirect()->route('item2.index')->with('error', 'Item not found');
+}
+
+public function update($id, Request $request)
+{
+    \Log::info('Update request received', [
+        'id' => $id,
+        'ecr' => $request->input('ecr'),
+        'rr' => $request->input('rr')
+    ]);
+
+    try {
+        $barang = Barang::findOrFail($id);
+
+        // Validasi input
+        $validatedData = $request->validate([
+            'ecr' => 'required',
+            'rr' => 'required',
+        ]);
+
+        // Update kolom ecr dan rr
+        $barang->ecr = $validatedData['ecr'];
+        $barang->rr = $validatedData['rr'];
+        $barang->save();
+
+        return response()->json(['success' => true]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error updating barang', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'An error occurred'], 500);
+    }
 }
 }

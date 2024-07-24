@@ -30,7 +30,6 @@ Route::get('/dashboard', function () {
 
 Route::get('/item2', [newController::class, 'index_item2'])->name('item2.index');
 
-Route::post('/items/{id}/update', [newController::class, 'update']);
 Route::post('/items/store', [newController::class, 'store']);
 
 Route::get('/items/pabrik/{id_pabrik}/bagian/{id_bagian}', [newController::class, 'showItems']);
@@ -40,3 +39,8 @@ Route::get('/update-values', [newController::class, 'updateValues'])->name('upda
 
 Route::get('/summary', [newController::class, 'index_summary'])->name('summary.index');
 Route::get('/update-values2', [newController::class, 'updateValues2'])->name('update-values2');
+Route::post('/items/{id}/update', [newController::class, 'update']);
+
+//Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2.update');
+Route::delete('/item2/{id}/delete', [newController::class, 'destroy'])->name('item2.delete');
+
