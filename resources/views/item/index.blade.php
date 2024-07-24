@@ -96,6 +96,7 @@
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues3(2, {{ session('b', 1) }})">- ECR P2B</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues3(3, {{ session('b', 1) }})">- ECR P3</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues3(4, {{ session('b', 1) }})">- ECR P4</a></li>
+                                        <li><a href="{{ route('bobots.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Setting ECR</a></li>
 
                                     </ul>
                                     </div>

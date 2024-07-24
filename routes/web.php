@@ -49,4 +49,7 @@ Route::delete('/item2/{id}/delete', [newController::class, 'destroy'])->name('it
 
 Route::get('/update-values3', [newController::class, 'updateValues3'])->name('update-values3');
 
+Route::get('/update-values4', [newController::class, 'updateValues4'])->name('update-values4');
+
+
 

@@ -91,7 +91,7 @@
             <div class="col-md-12 row">
                 
                 <div>
-                    <h3 class="text-center my-4"></h3>
+                    <h3 class="text-center my-4">Summary ECR</h3>
                     <hr>
                 </div>
 
@@ -125,6 +125,8 @@
                                             <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
                                             <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
                                             <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
+                                            <li><a href="{{ route('bobots.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Setting ECR</a></li>
+
                                         </ul>
                                     </div>
                                 </li>
