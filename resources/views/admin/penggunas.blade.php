@@ -25,7 +25,7 @@
                             <tr>
                                 <td>{{ $pengguna->username }}</td>
                                 <td>{{ $pengguna->status }}</td>
-                                <form method="POST" action="{{ route('koordinator.penggunas.approve', $pengguna->id) }}">
+                                <form method="POST" action="{{ route('admin.penggunas.approve', $pengguna->id) }}">
                                     @csrf
                                     <td>
                                         <select class="form-select" name="id_pabrik">
@@ -44,7 +44,7 @@
 
                         @empty
                             <div class="alert alert-danger">
-                                Tidak ada permohonan registrasi.
+                                Sedang tidak ada permohonan registrasi.
                             </div>
                         @endforelse
 

@@ -1,35 +1,7 @@
 @extends('layouts.apps')
 
 @section('content')
-<head>
 <title>@section('title','Datatable Koordinator')</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .modal-body input, .modal-body textarea {
-            width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
-        .form-group label {
-            flex: 1;
-            margin-bottom: 0; /* Menghilangkan margin bawah */
-        }
-        .form-group .input-group {
-            flex: 1;
-        }
-        .multiple-inputs .form-group {
-            flex: 1;
-        }
-        .multiple-inputs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-    </style>
-</head>
 
     <div class="container mt-2">
         <div class="row">
@@ -40,7 +12,7 @@
                     <hr>
                 </div>
 
-                <div class="col-md-10 card border-0 shadow-sm rounded">
+                <div class="card border-0 shadow-sm rounded">
                     <div class="card-body table-responsive">
                         <button class="btn btn-outline-primary active"{{-- data-id="{{ $bagian->id[1]}}" --}}>
                    {{--  {{ $bagian->nama_bagian }} --}} Amonia</button>

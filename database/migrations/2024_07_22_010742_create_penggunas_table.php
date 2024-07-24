@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('password');
             $table->boolean('approved')->default(false);
-            $table->enum('status', ['engineer', 'koordinator']);
+            $table->enum('status', ['engineer', 'koordinator', 'admin']);
             $table->timestamps();
 
             $table->unsignedBigInteger('id_pabrik')->nullable();

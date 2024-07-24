@@ -1,59 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.apps')
 
-    <title>Summary ECR</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        .modal-body input, .modal-body textarea {
-            width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
-        .form-group label {
-            flex: 1;
-            margin-bottom: 0; /* Menghilangkan margin bawah */
-        }
-        .form-group .input-group {
-            flex: 1;
-        }
-        .multiple-inputs .form-group {
-            flex: 1;
-        }
-        .multiple-inputs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px; /* Memberi jarak antar elemen */
-        }
-
-        /* Atur ukuran canvas menggunakan CSS */
-        /* #myPieChart {
-            width: 200px;
-            height: 200px;
-        } */
-
-        /* Atur ukuran canvas menggunakan CSS */
-        .chart-container {
-            width: 400px;
-            height: 400px;
-            display: inline-block;
-        }
-    </style>
-
-</head>
-
-<body style="background: lightgray">
-
+@section('content')
+<title>@section('title','Summary ECR')</title>
                                     
     <div class="container mt-2">
         <div class="row">
@@ -62,45 +10,6 @@
                 <div>
                     <h3 class="text-center my-4"></h3>
                     <hr>
-                </div>
-
-                
-
-                    <div class="col-md-2">
-                    <nav id="sidebarMenu" class="d-md-block bg-light sidebar collapse">
-                        <div class="position-sticky pt-3">
-                            <ul class="nav flex-column">
-    
-                                <li class="mb-1"> <a href="#" class="text-decoration-none">
-                                    <button class="btn btn-outline-primary btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#0d6efd"  stroke-width="1.75"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-folders me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
-                                    ECR Static Equipment
-                                    </button></a>
-
-
-                                    <form id="values-form2" method="GET" action="{{ route('update-values') }}">
-                                        @csrf
-                                        <input type="hidden" name="a" id="input-a" value="{{ session('a',1) }}">
-                                        <input type="hidden" name="b" id="input-b" value="{{ session('b',1) }}">
-                                    </form>
-
-                                    <div class="collapse" id="orders-collapse">
-                                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                            <!-- Item Summary ECR akan selalu aktif -->
-                                            <li><a href="{{ route('summary.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle active">- Summary ECR</a></li>
-                                            
-                                            <!-- Item lain hanya aktif jika `session('a', 1)` sesuai dengan nilai yang diberikan -->
-                                            <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle" onclick="updateValues(1, {{ session('b', 1) }})">- ECR P1B</a></li>
-                                            <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
-                                            <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
-                                            <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle " onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                               
-                            </ul>
-                        </div>
-                    </nav>
                 </div>
                 <div class="col-md-10 card border-0 shadow-sm rounded">
                     
@@ -124,9 +33,7 @@
 
                                     </ul>
                                 </div>
-                           
-
-                           
+                                                      
                                 <div class="dropdown mb-5">
                                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="true">
                                         {{ (session('d', 1) == 1 ? 'Amonia' : (session('d', 1) == 2 ? 'Urea' : (session('d', 1) == 3 ? 'Utility' : 'Select Item'))) }}
@@ -137,15 +44,7 @@
                                         <li><a class="dropdown-item {{ session('d', 1) == 3 ? 'active' : '' }}" href="#" onclick="updateValues2({{ session('c', 1) }}, 3)">Utility</a></li>
                                     </ul>
                                 </div>
-
-                                
                             </div>
-
-                         
-                        
-
-                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
                        <!-- Dua canvas untuk dua chart -->
@@ -529,5 +428,4 @@
 
     </script>
 
-</body>
-</html>
+@endsection

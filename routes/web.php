@@ -3,26 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\NewController;
 use App\Http\Controllers\KoordinatorController;
-use App\Http\Middleware\StatusMiddleware;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemController;
+use App\Http\Middleware\StatusMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/item', \App\Http\Controllers\ItemController::class);
+Route::get('/item', [newController::class, 'index_item'])->name('item');
+Route::get('/item2', [newController::class, 'index_item2'])->name('item2');
 Route::resource('/bobots', \App\Http\Controllers\BobotController::class);
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
 
 Route::get('/item2', [newController::class, 'index_item2'])->name('item2.index');
 
@@ -43,8 +36,8 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register']);
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('koordinator/penggunas', [KoordinatorController::class, 'index'])->name('koordinator.penggunas');
-    Route::post('koordinator/penggunas/{pengguna}', [KoordinatorController::class, 'approve'])->name('koordinator.penggunas.approve');
+    Route::get('admin/penggunas', [AdminController::class, 'index'])->name('admin.penggunas');
+    Route::post('admin/penggunas/{pengguna}', [AdminController::class, 'approve'])->name('admin.penggunas.approve');
 });
 
 // Common page for all users

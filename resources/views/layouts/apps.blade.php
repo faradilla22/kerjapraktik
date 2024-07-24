@@ -26,6 +26,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         .modal-body input, .modal-body textarea {
@@ -50,6 +51,11 @@
             display: flex;
             justify-content: space-around;
             margin-bottom: 15px; /* Memberi jarak antar elemen */
+        }
+        .chart-container {
+            width: 400px;
+            height: 400px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -83,13 +89,13 @@
                                 </a>
                             </li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR Static Equipment</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="#">Summary ECR</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('item.index') }}">ECR P1B</a></li>
+                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('summary.index') }}">Summary ECR</a></li>
+                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('item2.index') }}">ECR P1B</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P2B</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P3</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P4</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="{{ route('bobots.index') }}">Setting ECR</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('koordinator.penggunas') }}">Moderasi Registrasi</a></li>
+                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('admin.penggunas') }}">Moderasi Registrasi</a></li>
                             <li class="nav-item"><a class="nav-link link-danger" href="{{ route('login') }}">Logout</a></li>
                         </ul>
                     </div>
