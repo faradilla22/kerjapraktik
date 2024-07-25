@@ -9,6 +9,8 @@
     <title>Datatable koordinator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -226,9 +228,14 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>Approve <span id="itemTitle"></span></p>
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="approveCheck">
+                                                        <div class="form-check row">
+                                                            <div class="col-md-1">
+                                                            <input type="checkbox" class="form-check-input col-5" id="approveCheck">
+                                                            </div>
+
+                                                            <div class="col-10 me-2">
                                                             <label class="form-check-label" for="approveCheck">Saya yakin ingin menyetujui ini</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -259,8 +266,12 @@
                                                     <div class="modal-body">
                                                         <p>Reject <span id="rejectItemTitle"></span></p>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="rejectCheck">
+                                                            <div class="col-md-1">
+                                                            <input type="checkbox" class="form-check-input col-5" id="rejectCheck">
+                                                            </div>
+                                                            <div class="col-10 me-2">
                                                             <label class="form-check-label" for="rejectCheck">Saya yakin ingin menolak ini</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -330,7 +341,7 @@
                         </table>
 
                         <!-- Modal Reject -->
-                        <div class="modal fade" id="rejectItem" tabindex="-1" role="dialog" aria-labelledby="rejectItemLabel" aria-hidden="true">
+                       {{--  <div class="modal fade" id="rejectItem" tabindex="-1" role="dialog" aria-labelledby="rejectItemLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -353,7 +364,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <script>
                             function updateValues3(a, b) {
@@ -802,6 +813,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         //message with sweetalert
