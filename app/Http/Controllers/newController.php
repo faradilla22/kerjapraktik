@@ -328,7 +328,7 @@ public function changeStatus($id)
 }
 
 
-public function store(Request $request)
+/* public function store(Request $request)
 {
     // Validasi data yang diterima
     $validatedData = $request->validate([
@@ -372,7 +372,67 @@ public function store(Request $request)
     ]));
 
     return response()->json(['success' => true, 'barang' => $barang]);
+} */
+
+
+public function store(Request $request)
+{
+    // Validasi data yang diterima
+    $validatedData = $request->validate([
+        'item_name' => 'required|string|max:255',
+        'item_no' => 'required|string|max:255',
+        'item_r' => 'required|numeric',
+        'item_s' => 'required|numeric',
+        'item_l' => 'required|numeric',
+        'item_p' => 'required|numeric',
+        'item_e' => 'required|numeric',
+        'item_b' => 'required|numeric',
+        'item_h' => 'required|numeric',
+    ]);
+
+    // Ambil nilai $a dan $b dari session
+    $a = session('a', 1);
+    $b = session('b', 1);
+
+    // Ambil nilai bobot dari database
+    $bobots = Bobot::all();
+    $bobotArray = $bobots->pluck('nilai_bobot')->toArray();
+
+    // Hitung ECR
+    $ecr = ($validatedData['item_s'] * $bobotArray[0]) +
+           ($validatedData['item_l'] * $bobotArray[1]) +
+           ($validatedData['item_p'] * $bobotArray[2]) +
+           ($validatedData['item_e'] * $bobotArray[3]) +
+           ($validatedData['item_b'] * $bobotArray[4]) +
+           ($validatedData['item_h'] * $bobotArray[5]);
+
+    // Hitung RR (jika perlu, berdasarkan logika Anda)
+    $rr = $ecr * $validatedData['item_r'];
+
+    // Simpan barang baru dengan ECR dan RR
+    $barang = Barang::create(array_merge($validatedData, [
+        'id_pabrik' => $a,
+        'id_bagian' => $b,
+        'ECR' => $ecr,
+        'RR' => $rr,
+        'status' => 'Created Need Review',
+        'R' => $validatedData['item_r'],
+        'S' => $validatedData['item_s'],
+        'L' => $validatedData['item_l'], 
+        'P' => $validatedData['item_p'], 
+        'E' => $validatedData['item_e'], 
+        'B' => $validatedData['item_b'], 
+        'H' => $validatedData['item_h'], 
+
+        
+    ]));
+
+    return redirect()->route('item2.index')->with('success', 'Data berhasil disimpan');
 }
+
+
+
+
 
 public function approve($id, Request $request)
 {

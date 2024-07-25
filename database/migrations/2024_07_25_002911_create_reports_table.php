@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('pembuat');
+            $table->string('penyetujui');
+            
         });
     }
 

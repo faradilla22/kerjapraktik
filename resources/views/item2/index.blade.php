@@ -164,7 +164,7 @@
                             
                                                         
 
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                           {{--  <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
                             Tambah Item
                             </button>
 
@@ -181,6 +181,8 @@
 
                                         <form id="addItemForm">
                                             <div class="modal-body">
+                                                @csrf
+                                                @method('POST')
                                                 <div class="form-group">
                                                     <label for="itemName">Item Name</label>
                                                     <div class="input-group">
@@ -250,7 +252,98 @@
 
                                     </div>
                                 </div>
+                            </div> --}}
+
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                                Tambah Item
+                            </button>
+                        
+                            <!-- Modal -->
+                            <div class="modal fade" id="tambahItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Tambah Item</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                        
+                                        <form id="addItemForm" action="{{route('item2.store')}}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="itemName">Item Name</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="itemNo">Item No</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="itemNo" name="item_no" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="itemR">R</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="itemR" name="item_r" required>
+                                                    </div>
+                                                </div>
+                                                <div class="multiple-inputs">
+                                                    <div class="form-group">
+                                                        <label for="itemS" class="ms-2">S</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemS" name="item_s" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="itemL" class="ms-2">L</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemL" name="item_l" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="itemP" class="ms-2">P</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemP" name="item_p" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="multiple-inputs">
+                                                    <div class="form-group">
+                                                        <label for="itemE" class="ms-2">E</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemE" name="item_e" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="itemB" class="ms-2">B</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemB" name="item_b" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="itemH" class="ms-2">H</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="itemH" name="item_h" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">OK</button> 
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
+
+
+
+
+
                         </div>
 
                         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -572,8 +665,25 @@
                             }
                         </script> --}}
 
-                    <script>
-                             
+                             <!-- SweetAlert -->
+                            @if (session('success'))
+                        <script>
+                            
+                                
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: '{{ session('success') }}',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    });
+                                
+                            
+                        </script>
+                        @endif
+                    <script>        
 
                     function calculateAndSave(itemId) {
                         // Get the item row
@@ -727,7 +837,7 @@
                             }
                         </script> --}}
 
-                        <script>
+                        {{-- <script>
                             function submitAddItemForm() {
                                 const form = document.getElementById('addItemForm');
                                 const formData = new FormData(form);
@@ -736,7 +846,7 @@
                                 const a = document.getElementById('input-a').value;
                                 const b = document.getElementById('input-b').value;
                             
-                                fetch('/item2/store', {
+                                fetch(''{{ route('item2.store') }}'', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -777,7 +887,55 @@
                                     });
                                 });
                             }
-                            </script>
+                            </script> --}}
+
+
+                            <script>
+                                function submitAddItemForm() {
+                                    const form = document.getElementById('addItemForm');
+                                    const formData = new FormData(form);
+                                
+                                    fetch('{{ route('item2.store') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                        },
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Success',
+                                                text: 'Item added and calculated successfully!',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            }).then(() => {
+                                                $('#tambahItemModal').modal('hide');
+                                                location.reload(); // Refresh the page to show the new item
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'An error occurred while adding the item.',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while adding the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    });
+                                }
+                                </script>
                             
                         
 
