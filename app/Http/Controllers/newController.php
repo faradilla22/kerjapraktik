@@ -280,7 +280,7 @@ public function update($id, Request $request)
         // Validasi input
         $validatedData = $request->validate([
             'item_name' => 'required|string|max:255',
-            'item_no' => 'required|string|max:255|unique:barangs,item_no',
+            'item_no' => 'required|string|max:255',
             'item_r' => 'required|numeric',
             'item_s' => 'required|numeric',
             'item_l' => 'required|numeric',
@@ -288,11 +288,7 @@ public function update($id, Request $request)
             'item_e' => 'required|numeric',
             'item_b' => 'required|numeric',
             'item_h' => 'required|numeric'
-        ] , [
-            'item_no.unique' => 'Item No sudah ada. Silakan gunakan nomor yang berbeda.',
-
         ]
-    
     );
 
         // Hitung nilai ECR dan RR
@@ -385,7 +381,7 @@ public function store(Request $request)
     // Validasi data yang diterima
     $validatedData = $request->validate([
         'item_name' => 'required|string|max:255',
-        'item_no' => 'required|string|max:255|unique:barangs,item_no',
+        'item_no' => 'required|string|max:255',
         'item_r' => 'required|numeric',
         'item_s' => 'required|numeric',
         'item_l' => 'required|numeric',

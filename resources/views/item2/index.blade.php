@@ -9,6 +9,8 @@
     <title>Datatable Engineer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -52,6 +54,12 @@
             top: 10px;
             right: 10px;
         }
+
+        /* .custom-checkbox{
+            width:10px;
+            height: :10px;
+        } */
+
     </style>
 
 </head>
@@ -474,8 +482,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-primary" onclick="submitEditItemForm()">Update</button>
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary" onclick="submitEditItemForm()">Update</button>
+                                                            
                                                         </div>
                                                     </form>
                                                 </div>
@@ -526,23 +535,31 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="deleteModalLabel">Delete Equipment <span id="deleteItemName"></span></h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <form id="deleteForm" method="POST">
                                                             @csrf
                                                             @method('PATCH') <!-- Gunakan metode PATCH untuk mengubah status -->
                                                             <input type="hidden" name="item_id" id="deleteItemId">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" width="20px" height="20px" id="confirmDelete" required>
-                                                                <label class="form-check-label" for="confirmDelete">
-                                                                    Saya yakin ingin menghapus ini
-                                                                </label>
+                                                            <div class="form-check row">
+                                                                <div class="col-md-1">
+                                                                    <input class="form-check-input col-5" type="checkbox" id="confirmDelete" width="20px" height="20px" required>
+                                                                </div>
+                                                                <div class="col-10 me-2">
+                                                                    
+                                                                    <label class="form-check-label" for="confirmDelete">
+                                                                        Saya yakin ingin menghapus ini
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                         <button type="button" class="btn btn-danger" id="confirmDeleteBtn">OK</button>
                                                     </div>
                                                 </div>
@@ -1215,6 +1232,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {{-- <script>
+        document.getElementById('confirmDelete').addEventListener('change', function() {
+            const deleteButton = document.getElementById('deleteButton');
+            deleteButton.disabled = !this.checked;
+        });
+    </script> --}}
 
     <script>
         //message with sweetalert
