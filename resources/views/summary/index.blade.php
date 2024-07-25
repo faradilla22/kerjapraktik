@@ -79,6 +79,16 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        .rr-red {
+            color: red;
+        }
+        .rr-yellow {
+            color: yellow;
+        }
+        .rr-green {
+            color: green;
+        }
     </style>
 
 </head>
@@ -220,6 +230,18 @@
                                 @foreach ($item as $items) 
                                 @if (/* $items->id_pabrik==$a && $items->id_bagian==$b */ $items->id_pabrik == session('c', 1) && $items->id_bagian == session('d', 1)) 
             
+                                @php
+                                // Menentukan kelas berdasarkan nilai RR
+                                $rrClass = '';
+                                if ($items->RR >= 123) {
+                                    $rrClass = 'rr-red';
+                                } elseif ($items->RR >= 61) {
+                                    $rrClass = 'rr-yellow';
+                                } else {
+                                    $rrClass = 'rr-green';
+                                }
+                                @endphp
+
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -234,7 +256,7 @@
                                         <td>{{ $items->H }}</td>
                                         <td class="ecr-value">{{ $items->ECR }}</td>
                                         <td>{{ $items->R }}</td>
-                                        <td class="rr-value">{{ $items->RR }}</td>
+                                        <td class="rr-value {{ $rrClass }}">{{ $items->RR }}</td>
                                         
                                                          
                                     </tr>
@@ -571,9 +593,9 @@
                                 var rrValues = [];
                                 var labels = [];
                                 var categories = {
-                                    'High': { color: 'rgba(255, 99, 132, 0.2)', count: 0 },
-                                    'Medium': { color: 'rgba(255, 206, 86, 0.2)', count: 0 },
-                                    'Low': { color: 'rgba(75, 192, 192, 0.2)', count: 0 }
+                                    '>= 123 : High': { color: 'rgba(255, 99, 132, 0.2)', count: 0 },
+                                    '61 - 122 : Medium': { color: 'rgba(255, 206, 86, 0.2)', count: 0 },
+                                    '<=60 : Low': { color: 'rgba(75, 192, 192, 0.2)', count: 0 }
                                 };
                             
                                 document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
@@ -581,11 +603,11 @@
                                     var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
                             
                                     if (rrValue >= 123) {
-                                        categories['High'].count++;
+                                        categories['>= 123 : High'].count++;
                                     } else if (rrValue >= 61) {
-                                        categories['Medium'].count++;
+                                        categories['61 - 122 : Medium'].count++;
                                     } else {
-                                        categories['Low'].count++;
+                                        categories['<=60 : Low'].count++;
                                     }
                                 });
                             

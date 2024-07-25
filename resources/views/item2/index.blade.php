@@ -11,6 +11,52 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        // Handler untuk tombol Trends
+        $('#itemTableBody').on('click', '.btn-trends', function() {
+            const id_barang = $(this).data('id');
+            loadTrends(id_barang);
+        });
+    });
+
+
+        function loadTrends(id_barang) {
+            $.ajax({
+                url: `/item2/${id_barang}/trends`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    if(response.trends) {
+                        const trends = response.trends;
+                        let trendsHtml = '';
+                        if (trends.length > 0) {
+                            $.each(trends, function(index, trend) {
+                                trendsHtml += `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${trend.timestamp}</td>
+                                    <td>${trend.R}</td>
+                                </tr>`;
+                            });
+                        } else {
+                            trendsHtml = '<tr><td colspan="3">No trends available</td></tr>';
+                        }
+                        $('#trendsTable tbody').html(trendsHtml);
+                        $('#trendModal').modal('show');
+                    } else {
+                        alert('No data found');
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert('Error fetching data');
+                }
+            });
+        }
+    </script>
+
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -112,6 +158,7 @@
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 2 ? 'active' : '' }}" onclick="updateValues(2, {{ session('b', 1) }})">- ECR P2B</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 3 ? 'active' : '' }}" onclick="updateValues(3, {{ session('b', 1) }})">- ECR P3</a></li>
                                         <li><a href="#" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle {{ session('a', 1) == 4 ? 'active' : '' }}" onclick="updateValues(4, {{ session('b', 1) }})">- ECR P4</a></li>
+                                        <li><a href="{{ route('bobots.index') }}" class="link-tertiery rounded align-items-center text-decoration-none btn btn-toggle">- Setting ECR</a></li>
 
                                     </ul>
                                     </div>
@@ -560,7 +607,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn" disabled>OK</button>
+                                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">OK</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -573,10 +620,71 @@
                                         <!-- <a href="#" class="btn btn-md btn-success mb-3">Edit/a>
                                         <a href="#" class="btn btn-md btn-danger mb-3">Hapus</a> -->
                                         
-                                        <a href="#" class="btn btn-md btn-warning text-white mb-3">Trend</a>
+                                        {{-- <a href="#" class="btn btn-md btn-warning text-white mb-3">Trend</a> --}}
+
+                                        <button class="btn btn-md btn-warning text-white mb-3 btn-trends" data-id="{{ $items->id }}" data-toggle="modal" data-target="#trendModal">Trends</button>
                                         </td>
 
                                        
+                                         <!-- Modal -->
+                                       {{--  <div class="modal" id="trendModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="trendModalLabel">Trend Data</h5>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table id="trendsTable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>No</th>
+                                                                    <th>Last Update</th>
+                                                                    <th>R</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- Data akan ditambahkan di sini melalui AJAX -->
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> --}}
+
+                                        <!-- Modal -->
+                                   {{--  <div class="modal fade" id="trendModal" tabindex="-1" role="dialog" aria-labelledby="trendModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="trendModalLabel">Trend Data</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table" id="trendsTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Last Update</th>
+                                                                <th>R</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data akan ditambahkan di sini melalui AJAX -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+
+                                    <!-- Modal -->
+                                    
+
+
+
                                     </tr>
                                 
                                 
@@ -588,6 +696,32 @@
                             </tbody>
                         </table>
 
+                                        <div class="modal fade" id="trendModal" tabindex="-1" role="dialog" aria-labelledby="trendModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="trendModalLabel">Trend Data</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table" id="trendsTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Last Update</th>
+                                                                <th>R</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data akan ditambahkan di sini melalui AJAX -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                         
                         <script>
                             function updateValues(a, b) {
@@ -1195,12 +1329,14 @@
                                 const deleteForm = document.getElementById('deleteForm');
                                 const deleteItemName = document.getElementById('deleteItemName');
                                 const deleteItemId = document.getElementById('deleteItemId');
+                                const confirmDeleteCheckbox = document.getElementById('confirmDelete');
                                 const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
                         
                                 document.querySelectorAll('.delete-item-btn').forEach(button => {
                                     button.addEventListener('click', function() {
                                         const itemName = this.dataset.name;
                                         const itemId = this.dataset.id;
+                                       
                                         deleteItemName.textContent = itemName;
                                         deleteItemId.value = itemId;
                                         deleteForm.action = `/item2/${itemId}/change-status`; // Sesuaikan dengan rute untuk mengubah status
@@ -1211,6 +1347,17 @@
                                 confirmDeleteBtn.addEventListener('click', function() {
                                     deleteForm.submit();
                                 });
+
+                                // Fungsi untuk mengupdate status tombol
+                                function updateButtonStatus() {
+                                    confirmDeleteBtn.disabled = !confirmDeleteCheckbox.checked;
+                                }
+
+                                // Event listener untuk checkbox
+                                confirmDeleteCheckbox.addEventListener('change', updateButtonStatus);
+
+                                // Inisialisasi status tombol saat halaman dimuat
+                                updateButtonStatus();
                             });
                         </script>
                         

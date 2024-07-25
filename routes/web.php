@@ -68,3 +68,6 @@ Route::post('/item/{id}/approve', [newController::class, 'approve'])->name('item
 //Route::post('/item/{id}/reject', [newController::class, 'rejectItem'])->name('item.reject');
 
 Route::post('/item/{id}/reject', [newController::class, 'reject'])->name('item.reject');
+
+
+Route::get('/item2/{id_barang}/trends', [newController::class, 'getTrends'])->name('item2.trends');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bobot; 
 use App\Models\Barang;
+use App\Models\Trend;
 
 class newController extends Controller
 {
@@ -479,6 +480,18 @@ public function approve($id, Request $request)
 
     return response()->json(['success' => true]);
 }
+
+
+
+
+
+public function getTrends(Request $request, $id_barang)
+    {
+        // Mendapatkan tren berdasarkan fk_id_barang
+        $trends = Trend::where('id_barang', $id_barang)->get();
+
+        return response()->json(compact('trends'));
+    }
 
 
 }
