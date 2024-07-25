@@ -183,20 +183,10 @@
 
                        <!-- Dua canvas untuk dua chart -->
                        
-                       <div>
-                       <div class="chart-legend-container row mb-4">
+                       <div> 
+                        <div class="chart-legend-container row mb-2">
                             <div class="chart-container">
-                                <h5 class="text-center">ECR</h5>
-                                <br>
-                                <canvas id="ecrPieChart"></canvas>
-                            </div>
-                            <div class="color-legend" id="ecrColorLegend"></div>
-                        </div>
-                        
-                        <div class="chart-legend-container row mb-4">
-                            <div class="chart-container">
-                                <h5 class="text-center">RR</h5>
-                                <br>
+                                
                                 <canvas id="rrPieChart"></canvas>
                             </div>
                             <div class="color-legend" id="rrColorLegend"></div>
@@ -398,70 +388,17 @@
                             }
                         </script>
 
-                        <script>
-                            function submitAddItemForm() {
-                                const form = document.getElementById('addItemForm');
-                                const formData = new FormData(form);
-                                
-                                // Tambahkan nilai a dan b dari session
-                                const a = document.getElementById('input-a').value;
-                                const b = document.getElementById('input-b').value;
-
-                                fetch('/items/store', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                    },
-                                    body: JSON.stringify(Object.assign(Object.fromEntries(formData), { a: a, b: b }))
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Success',
-                                            text: 'Item added and calculated successfully!',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        }).then(() => {
-                                            $('#tambahItemModal').modal('hide');
-                                            // Optionally refresh table or perform other UI updates
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Error',
-                                            text: 'An error occurred while adding the item.',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'An error occurred while adding the item.',
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    });
-                                });
-                            }
-                        </script>
+                        
 
 
-                        <script>
+                        {{-- <script>
                               document.addEventListener('DOMContentLoaded', function () {
-                                var ecrValues = [];
                                 var rrValues = [];
                                 var labels = [];
 
                                 document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
-                                    var ecrValue = row.querySelector('.ecr-value').textContent;
                                     var rrValue = row.querySelector('.rr-value').textContent;
                                     var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
-                                    ecrValues.push(ecrValue);
                                     rrValues.push(rrValue);
                                     labels.push(itemName);
                                 });
@@ -492,37 +429,6 @@
                                         colorLegendElement.appendChild(legendItem);
                                     });
                                 }
-
-                                var ctxEcr = document.getElementById('ecrPieChart').getContext('2d');
-                                var ecrPieChart = new Chart(ctxEcr, {
-                                    type: 'pie',
-                                    data: {
-                                        labels: labels,
-                                        datasets: [{
-                                            label: 'ECR',
-                                            data: ecrValues,
-                                            backgroundColor: colors,
-                                            borderColor: colors.map(color => color.replace('0.2', '1')),
-                                            borderWidth: 1
-                                        }]
-                                    },
-                                    options: {
-                                        responsive: true,
-                                        plugins: {
-                                            legend: {
-                                                display: false,
-                                            },
-                                            tooltip: {
-                                                callbacks: {
-                                                    label: function (tooltipItem) {
-                                                        return labels[tooltipItem.dataIndex] + ': ' + ecrValues[tooltipItem.dataIndex];
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                                createLegend(document.getElementById('ecrColorLegend'), labels, colors);
 
                                 var ctxRr = document.getElementById('rrPieChart').getContext('2d');
                                 var rrPieChart = new Chart(ctxRr, {
@@ -658,7 +564,93 @@
                                     }
                                 });
                             }); */
-                        </script>
+                        </script> --}}
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var rrValues = [];
+                                var labels = [];
+                                var categories = {
+                                    'High': { color: 'rgba(255, 99, 132, 0.2)', count: 0 },
+                                    'Medium': { color: 'rgba(255, 206, 86, 0.2)', count: 0 },
+                                    'Low': { color: 'rgba(75, 192, 192, 0.2)', count: 0 }
+                                };
+                            
+                                document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
+                                    var rrValue = parseFloat(row.querySelector('.rr-value').textContent);
+                                    var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
+                            
+                                    if (rrValue >= 123) {
+                                        categories['High'].count++;
+                                    } else if (rrValue >= 61) {
+                                        categories['Medium'].count++;
+                                    } else {
+                                        categories['Low'].count++;
+                                    }
+                                });
+                            
+                                var chartLabels = [];
+                                var chartData = [];
+                                var chartColors = [];
+                            
+                                for (var category in categories) {
+                                    if (categories[category].count > 0) {
+                                        chartLabels.push(category);
+                                        chartData.push(categories[category].count);
+                                        chartColors.push(categories[category].color);
+                                    }
+                                }
+                            
+                                function createLegend(colorLegendElement, labels, colors) {
+                                    labels.forEach((label, index) => {
+                                        var legendItem = document.createElement('div');
+                                        legendItem.classList.add('legend-item');
+                            
+                                        var colorBox = document.createElement('div');
+                                        colorBox.classList.add('legend-color');
+                                        colorBox.style.backgroundColor = colors[index];
+                            
+                                        var labelText = document.createElement('span');
+                                        labelText.textContent = label;
+                            
+                                        legendItem.appendChild(colorBox);
+                                        legendItem.appendChild(labelText);
+                                        colorLegendElement.appendChild(legendItem);
+                                    });
+                                }
+                            
+                                var ctxRr = document.getElementById('rrPieChart').getContext('2d');
+                                var rrPieChart = new Chart(ctxRr, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: chartLabels,
+                                        datasets: [{
+                                            label: 'RR Categories',
+                                            data: chartData,
+                                            backgroundColor: chartColors,
+                                            borderColor: chartColors.map(color => color.replace('0.2', '1')),
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (tooltipItem) {
+                                                        return chartLabels[tooltipItem.dataIndex] + ': ' + chartData[tooltipItem.dataIndex];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                createLegend(document.getElementById('rrColorLegend'), chartLabels, chartColors);
+                            });
+                            </script>
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {

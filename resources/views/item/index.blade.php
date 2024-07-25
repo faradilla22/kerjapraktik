@@ -208,7 +208,6 @@
                                         <td>{{ $items->R }}</td>
                                         <td class="rr-value">{{ $items->RR }}</td>
                                         <td>
-                                        <a href="#" class="btn btn-md btn-primary mb-3" onclick="calculateAndSave({{ $items->id }})">Calculate</a>
                                         
                                         <!-- Button to Open Edit Modal -->
                                         <button type="button" class="btn btn-success mb-3" data-toggle="modal" onclick="openApproveModal({{ $items->id }}, '{{ $items->item_name }}')">
