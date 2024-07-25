@@ -394,6 +394,24 @@ public function approve($id, Request $request)
 }
 
 
+/* public function rejectItem($id, Request $request)
+    {
+        $item = Barang::findOrFail($id);
+
+        $item->status = 'Rejected';
+        $item->save();
+
+        return response()->json(['success' => true]);
+    } */
+
+    public function reject($id, Request $request)
+{
+    $item = Barang::findOrFail($id);
+    $item->status = 'Rejected';
+    $item->save();
+
+    return response()->json(['success' => true]);
+}
 
 
 }

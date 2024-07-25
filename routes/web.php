@@ -61,3 +61,7 @@ Route::post('/item2/{id}/update', [newController::class, 'update'])->name('item2
 Route::post('/item2/store', [newController::class, 'store'])->name('item2.store');
 
 Route::post('/item/{id}/approve', [newController::class, 'approve'])->name('item.approve');
+
+//Route::post('/item/{id}/reject', [newController::class, 'rejectItem'])->name('item.reject');
+
+Route::post('/item/{id}/reject', [newController::class, 'reject'])->name('item.reject');

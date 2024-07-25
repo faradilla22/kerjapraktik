@@ -241,11 +241,69 @@
                                         </div>
 
 
-                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" data-target="#rejectItem" onclick="">
+
+                                        <!-- Button to Open Reject Modal -->
+                                        <button type="button" class="btn btn-danger mb-3" data-toggle="modal" onclick="openRejectModal({{ $items->id }}, '{{ $items->item_name }}')">
                                             Reject
                                         </button>
 
-                                        
+                                        <!-- Modal HTML for Reject -->
+                                        <div class="modal fade" id="rejectItemModal" tabindex="-1" aria-labelledby="rejectItemModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="rejectItemModalLabel">Reject Item</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Reject <span id="rejectItemTitle"></span></p>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="rejectCheck">
+                                                            <label class="form-check-label" for="rejectCheck">Saya yakin ingin menolak ini</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" id="rejectBtn" disabled>OK</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                       {{--  <button type="button" class="btn btn-danger mb-3" data-toggle="modal" onclick="showRejectModal({{ $items->id }}, '{{ $items->item_name }}')">
+                                            Reject
+                                        </button> --}}
+
+                                        <!-- Modal Reject -->
+                                        {{-- <div class="modal fade" id="rejectItem" tabindex="-1" role="dialog" aria-labelledby="rejectItemLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="rejectItemLabel">Reject <span id="rejectItemName"></span></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="rejectForm">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" id="rejectConfirm" required>
+                                                                <label for="rejectConfirm">Saya yakin ingin menolak ini</label>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger" onclick="rejectItem()">OK</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> --}}
 
                                         
 
@@ -272,7 +330,32 @@
                             </tbody>
                         </table>
 
-                        
+                        <!-- Modal Reject -->
+                        <div class="modal fade" id="rejectItem" tabindex="-1" role="dialog" aria-labelledby="rejectItemLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="rejectItemLabel">Reject <span id="rejectItemName"></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="rejectForm">
+                                            <div class="form-group">
+                                                <input type="checkbox" id="rejectConfirm" required>
+                                                <label for="rejectConfirm">Saya yakin ingin menolak ini</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" onclick="rejectItem()">OK</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <script>
                             function updateValues3(a, b) {
                                 document.getElementById('input-a').value = a;
@@ -604,6 +687,102 @@
                             });
                         </script>
                         
+
+                        
+
+                        {{-- <script>
+                            let currentItemId = null;
+                        
+                            function showRejectModal(itemId, itemName) {
+                                currentItemId = itemId;
+                                document.getElementById('rejectItemName').textContent = itemName;
+                                $('#rejectItem').modal('show');
+                            }
+                        
+                            function rejectItem() {
+                                if (document.getElementById('rejectConfirm').checked) {
+                                    // AJAX request to update the item status to Rejected
+                                    $.ajax({
+                                        url: '/item/' + currentItemId + '/reject',
+                                        type: 'POST',
+                                        data: {
+                                            _token: '{{ csrf_token() }}'
+                                        },
+                                        success: function(response) {
+                                            if(response.success) {
+                                                // Update the item row in the table or reload the page
+                                                location.reload();
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            console.log(xhr.responseText);
+                                        }
+                                    });
+                                    $('#rejectItem').modal('hide');
+                                }
+                            }
+                        </script> --}}
+
+                        <script>
+                            let selectedItemRejectId;
+                            
+                            function openRejectModal(itemId, itemName) {
+                                selectedItemRejectId = itemId;
+                                document.getElementById('rejectItemTitle').innerText = itemName;
+                                document.getElementById('rejectCheck').checked = false;
+                                document.getElementById('rejectBtn').disabled = true;
+                                $('#rejectItemModal').modal('show');
+                            }
+                            
+                            document.getElementById('rejectCheck').addEventListener('change', function() {
+                                document.getElementById('rejectBtn').disabled = !this.checked;
+                            });
+                            
+                            document.getElementById('rejectBtn').addEventListener('click', function() {
+                                fetch(`/item/${selectedItemRejectId}/reject`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        status: 'Rejected'
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item rejected successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while rejecting the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while rejecting the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            });
+                            </script>
+                            
 
 
 
