@@ -52,10 +52,62 @@
             justify-content: space-around;
             margin-bottom: 15px; /* Memberi jarak antar elemen */
         }
+        .chart-legend-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto; /* memusatkan container jika lebar lebih kecil dari lebar tampilan */
+            padding: 20px; /* memberi padding agar elemen tidak menempel pada tepi container */
+            width: auto;
+        }
         .chart-container {
-            width: 400px;
-            height: 400px;
+            width: 40%;
+            height: auto;
             display: inline-block;
+            justify-content: center;
+            align-items: center;
+        }
+        .color-legend {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 20%;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .rr-red {
+            color: red;
+        }
+        .rr-yellow {
+            color: yellow;
+        }
+        .rr-green {
+            color: green;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: center;
+            border-bottom: none;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            border-top: none;
+        }
+        .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>

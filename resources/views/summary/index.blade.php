@@ -8,7 +8,7 @@
             <div class="col-md-12 row">
                 
                 <div>
-                    <h3 class="text-center my-4"></h3>
+                    <h3 class="text-center my-4">Summary ECR</h3>
                     <hr>
                 </div>
                 <div class="col-md-10 card border-0 shadow-sm rounded">
@@ -47,16 +47,19 @@
                         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
                        <!-- Dua canvas untuk dua chart -->
-                       <div class="row">
-                        <div class="chart-container">
-                            <canvas id="ecrPieChart"></canvas>
+                       
+                       <div> 
+                        <div class="chart-legend-container row mb-2">
+                            <div class="chart-container">
+                                
+                                <canvas id="rrPieChart"></canvas>
+                            </div>
+                            <div class="color-legend" id="rrColorLegend"></div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="rrPieChart"></canvas>
                         </div>
-                    </div>
+                    
                       
-                        <table class="table table-bordered table-sm w-70 mt-2" id="myTable">
+                        <table class="table table-bordered table-sm w-70 mt-2 mb-5" id="myTable">
                             <thead>
                                 <tr>
                                 <th scope="col">No.</th>
@@ -82,6 +85,18 @@
                                 @foreach ($item as $items) 
                                 @if (/* $items->id_pabrik==$a && $items->id_bagian==$b */ $items->id_pabrik == session('c', 1) && $items->id_bagian == session('d', 1)) 
             
+                                @php
+                                // Menentukan kelas berdasarkan nilai RR
+                                $rrClass = '';
+                                if ($items->RR >= 123) {
+                                    $rrClass = 'rr-red';
+                                } elseif ($items->RR >= 61) {
+                                    $rrClass = 'rr-yellow';
+                                } else {
+                                    $rrClass = 'rr-green';
+                                }
+                                @endphp
+
                                     <tr data-id="{{ $items->id }}">
                                         <td> </td>
                                         <td>{{$items->updated_at}}</td>
@@ -96,7 +111,7 @@
                                         <td>{{ $items->H }}</td>
                                         <td class="ecr-value">{{ $items->ECR }}</td>
                                         <td>{{ $items->R }}</td>
-                                        <td class="rr-value">{{ $items->RR }}</td>
+                                        <td class="rr-value {{ $rrClass }}">{{ $items->RR }}</td>
                                         
                                                          
                                     </tr>
@@ -107,6 +122,28 @@
                             @endforeach
                             </tbody>
                         </table>
+
+                        <ul type="none">
+                            <h6>Legend:</h6>
+                            <li>
+                                <p>- S = Safety</p>
+                            </li>
+                            <li>
+                                <p>- L = Lingkungan</p>
+                            </li>
+                            <li>
+                                <p>- P = Produksi</p>
+                            </li>
+                            <li>
+                                <p>- E = Elemen Biaya Operasi</p>
+                            </li>
+                            <li>
+                                <p>- B = Elemen Biaya Perbaikan</p>
+                            </li>
+                            <li>
+                                <p>- H = Kegagalan Tersembunyi</p>
+                            </li>
+                        </ul>
 
                         
                         <script>
@@ -228,61 +265,80 @@
                             }
                         </script>
 
-                        <script>
-                            function submitAddItemForm() {
-                                const form = document.getElementById('addItemForm');
-                                const formData = new FormData(form);
-                                
-                                // Tambahkan nilai a dan b dari session
-                                const a = document.getElementById('input-a').value;
-                                const b = document.getElementById('input-b').value;
+                        
 
-                                fetch('/items/store', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                    },
-                                    body: JSON.stringify(Object.assign(Object.fromEntries(formData), { a: a, b: b }))
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Success',
-                                            text: 'Item added and calculated successfully!',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        }).then(() => {
-                                            $('#tambahItemModal').modal('hide');
-                                            // Optionally refresh table or perform other UI updates
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Error',
-                                            text: 'An error occurred while adding the item.',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'An error occurred while adding the item.',
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    });
+
+                        {{-- <script>
+                              document.addEventListener('DOMContentLoaded', function () {
+                                var rrValues = [];
+                                var labels = [];
+
+                                document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
+                                    var rrValue = row.querySelector('.rr-value').textContent;
+                                    var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
+                                    rrValues.push(rrValue);
+                                    labels.push(itemName);
                                 });
-                            }
-                        </script>
 
+                                var colors = [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ];
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
+                                function createLegend(colorLegendElement, labels, colors) {
+                                    labels.forEach((label, index) => {
+                                        var legendItem = document.createElement('div');
+                                        legendItem.classList.add('legend-item');
+
+                                        var colorBox = document.createElement('div');
+                                        colorBox.classList.add('legend-color');
+                                        colorBox.style.backgroundColor = colors[index];
+
+                                        var labelText = document.createElement('span');
+                                        labelText.textContent = label;
+
+                                        legendItem.appendChild(colorBox);
+                                        legendItem.appendChild(labelText);
+                                        colorLegendElement.appendChild(legendItem);
+                                    });
+                                }
+
+                                var ctxRr = document.getElementById('rrPieChart').getContext('2d');
+                                var rrPieChart = new Chart(ctxRr, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            label: 'RR',
+                                            data: rrValues,
+                                            backgroundColor: colors,
+                                            borderColor: colors.map(color => color.replace('0.2', '1')),
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (tooltipItem) {
+                                                        return labels[tooltipItem.dataIndex] + ': ' + rrValues[tooltipItem.dataIndex];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                createLegend(document.getElementById('rrColorLegend'), labels, colors);
+                            });
+                           /*  document.addEventListener('DOMContentLoaded', function () {
                                 var ecrValues = [];
                                 var rrValues = [];
                                 var labels = [];
@@ -384,8 +440,94 @@
                                         }
                                     }
                                 });
+                            }); */
+                        </script> --}}
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var rrValues = [];
+                                var labels = [];
+                                var categories = {
+                                    '>= 123 : High': { color: 'rgba(255, 99, 132, 0.2)', count: 0 },
+                                    '61 - 122 : Medium': { color: 'rgba(255, 206, 86, 0.2)', count: 0 },
+                                    '<=60 : Low': { color: 'rgba(75, 192, 192, 0.2)', count: 0 }
+                                };
+                            
+                                document.querySelectorAll('#itemTableBody tr').forEach(function (row) {
+                                    var rrValue = parseFloat(row.querySelector('.rr-value').textContent);
+                                    var itemName = row.querySelector('td:nth-child(5)').textContent; // Column for item name
+                            
+                                    if (rrValue >= 123) {
+                                        categories['>= 123 : High'].count++;
+                                    } else if (rrValue >= 61) {
+                                        categories['61 - 122 : Medium'].count++;
+                                    } else {
+                                        categories['<=60 : Low'].count++;
+                                    }
+                                });
+                            
+                                var chartLabels = [];
+                                var chartData = [];
+                                var chartColors = [];
+                            
+                                for (var category in categories) {
+                                    if (categories[category].count > 0) {
+                                        chartLabels.push(category);
+                                        chartData.push(categories[category].count);
+                                        chartColors.push(categories[category].color);
+                                    }
+                                }
+                            
+                                function createLegend(colorLegendElement, labels, colors) {
+                                    labels.forEach((label, index) => {
+                                        var legendItem = document.createElement('div');
+                                        legendItem.classList.add('legend-item');
+                            
+                                        var colorBox = document.createElement('div');
+                                        colorBox.classList.add('legend-color');
+                                        colorBox.style.backgroundColor = colors[index];
+                            
+                                        var labelText = document.createElement('span');
+                                        labelText.textContent = label;
+                            
+                                        legendItem.appendChild(colorBox);
+                                        legendItem.appendChild(labelText);
+                                        colorLegendElement.appendChild(legendItem);
+                                    });
+                                }
+                            
+                                var ctxRr = document.getElementById('rrPieChart').getContext('2d');
+                                var rrPieChart = new Chart(ctxRr, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: chartLabels,
+                                        datasets: [{
+                                            label: 'RR Categories',
+                                            data: chartData,
+                                            backgroundColor: chartColors,
+                                            borderColor: chartColors.map(color => color.replace('0.2', '1')),
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (tooltipItem) {
+                                                        return chartLabels[tooltipItem.dataIndex] + ': ' + chartData[tooltipItem.dataIndex];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                createLegend(document.getElementById('rrColorLegend'), chartLabels, chartColors);
                             });
-                        </script>
+                            </script>
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
