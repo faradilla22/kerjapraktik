@@ -2,6 +2,7 @@
 
 @section('content')
 <title>@section('title','Datatable Engineer')</title>
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
@@ -11,9 +12,6 @@
                 </div>
                 <div class="card border-0 shadow-sm rounded">
                     
-
-                    
-
                     <div class="card-body table-responsive">
                         <p>Last Reported : </p>
                         <table class="table table-bordered table-sm w-50 ">

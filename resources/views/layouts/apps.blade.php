@@ -63,7 +63,7 @@
     <div>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand text-primary" href="#"> pakPTL
+                <a class="navbar-brand text-primary" href="#">pakPTL
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -80,7 +80,7 @@
         <div class="container-fluid d-flex flex-column" style="min-height: 100vh;">
             <div class="row flex-grow-1">
                 <!-- Left Sidebar -->
-                <nav class="col-md-3 col-lg-2 d-md-block sidebar bg-white collapse">
+                <nav class="col-md-3 col-lg-2 d-md-block sidebar bg-white collapse" id="sidebarMenu">
                     <div class="position-sticky pt-3">
                         <ul class="nav flex-column">
                             <li class="nav-item">
@@ -90,12 +90,19 @@
                             </li>
                             <li class="nav-item"><a class="nav-link link-dark" href="#">ECR Static Equipment</a></li>
                             <li class="nav-item"><a class="nav-link link-dark" href="{{ route('summary.index') }}">Summary ECR</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('item2.index') }}">ECR P1B</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P2B</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P3</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P4</a></li>
+                            @auth
+                                @if(Auth::user()->status === 'koordinator')
+                                    <li class="nav-item"><a class="nav-link link-dark" href="{{ route('item') }}">ECR P1B</a></li>
+                                    <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P2B</a></li>
+                                    <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P3</a></li>
+                                    <li class="nav-item"><a class="nav-link link-dark" href="#">ECR P4</a></li>
+                                @elseif(Auth::user()->status === 'engineer' && Auth::user()->pabrik->nama_pabrik === 'P1B')
+                                    <li class="nav-item"><a class="nav-link link-dark" href="{{ route('item2.index') }}">ECR P1B</a></li>
+                                @elseif(Auth::user()->status === 'admin')
+                                    <li class="nav-item"><a class="nav-link link-dark" href="{{ route('admin.penggunas') }}">Moderasi Registrasi</a></li>
+                                @endif
+                            @endauth
                             <li class="nav-item"><a class="nav-link link-dark" href="{{ route('bobots.index') }}">Setting ECR</a></li>
-                            <li class="nav-item"><a class="nav-link link-dark" href="{{ route('admin.penggunas') }}">Moderasi Registrasi</a></li>
                             <li class="nav-item"><a class="nav-link link-danger" href="{{ route('login') }}">Logout</a></li>
                         </ul>
                     </div>

@@ -30,7 +30,6 @@
                                         <li><a class="dropdown-item {{ session('c', 1) == 2 ? 'active' : '' }}" href="#" onclick="updateValues2({{ session('d', 1) }}, 2)">Pusri 2B</a></li>
                                         <li><a class="dropdown-item {{ session('c', 1) == 3 ? 'active' : '' }}" href="#" onclick="updateValues2({{ session('d', 1) }}, 3)">Pusri 3</a></li>
                                         <li><a class="dropdown-item {{ session('c', 1) == 4 ? 'active' : '' }}" href="#" onclick="updateValues2({{ session('d', 1) }}, 4)">Pusri 4</a></li>
-
                                     </ul>
                                 </div>
                                                       

@@ -15,8 +15,6 @@ class newController extends Controller
         $bobots = Bobot::latest()->paginate(10);
         //$penggunas = Pengguna::latest()->paginate(10);
 
-       //render view with products
-      
         //render view with products
         return view('item.index', compact('item','bobots'));
     }
@@ -50,7 +48,6 @@ class newController extends Controller
 
         //render view with products
        return view('item2.index', compact('item','bobots'));
-       // return view('item2.index', compact('item','bobots','pabrik', 'bagian'));
 
     }
 

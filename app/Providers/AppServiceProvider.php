@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
         $router = $this->app['router'];
 
         // Register route-specific middleware
-        $router->aliasMiddleware('status', \App\Http\Middleware\StatusMiddleware::class);
+        $router->aliasMiddleware('cekEngineer', \App\Http\Middleware\CekEngineer::class);
+        $router->aliasMiddleware('cekKoordinator', \App\Http\Middleware\CekKoordinator::class);
+        $router->aliasMiddleware('cekAdmin', \App\Http\Middleware\CekAdmin::class);
     }
 }
