@@ -59,6 +59,7 @@
 
 
     <style>
+        
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
             margin-bottom: 15px; /* Memberi jarak antar elemen */
@@ -202,9 +203,48 @@
                             History Report
                             </button>
                         
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#terbitkanReport">
+                            {{-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#terbitkanReport">
                             Terbitkan Report
+                            </button> --}}
+
+
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#reportModal">
+                                Terbitkan Report
                             </button>
+                            
+                            <!-- The Modal -->
+                            <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="reportModalLabel">Terbitkan report</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group row">
+                                                    <label for="createdBy" class="col-sm-4 col-form-label mb-3">Dibuat Oleh</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" readonly class="form-control-plaintext" id="createdBy" value="Ikhsan">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="approvedBy" class="col-sm-4 col-form-label mb-3">Disetujui Oleh</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" readonly class="form-control-plaintext" id="approvedBy" value="Adibrata">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success btn-custom" data-dismiss="modal">OK</button>
+                                            <button type="button" class="btn btn-secondary btn-custom" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                           
                         </div>
