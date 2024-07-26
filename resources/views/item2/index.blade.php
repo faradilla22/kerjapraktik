@@ -1105,9 +1105,92 @@
 
                             <script>
                                 function submitAddItemForm() {
-                                    const form = document.getElementById('addItemForm');
+                                    /* const form = document.getElementById('addItemForm');
                                     const formData = new FormData(form);
                                 
+                                    fetch('{{ route('item2.store') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                        },
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Success',
+                                                text: 'Item added and calculated successfully!',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            }).then(() => {
+                                                $('#tambahItemModal').modal('hide');
+                                                location.reload(); // Refresh the page to show the new item
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'An error occurred while adding the item.',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while adding the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }); */
+
+
+                                    const form = document.getElementById('addItemForm');
+                                    const formData = new FormData(form);
+
+                                    // Get input values
+                                    const s = parseFloat(formData.get('item_s'));
+                                    const l = parseFloat(formData.get('item_l'));
+                                    const p = parseFloat(formData.get('item_p'));
+                                    const e = parseFloat(formData.get('item_e'));
+                                    const b = parseFloat(formData.get('item_b'));
+                                    const h = parseFloat(formData.get('item_h'));
+                                    const r = parseFloat(formData.get('item_r'));
+
+                                    // Array to store bobot values
+                                    let bobotArray = [];
+
+                                    // Get bobot values from the table or define them manually if they are constant
+                                    document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                                        const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                                        bobotArray.push(bobot);
+                                    });
+
+                                    // Ensure the bobotArray has the correct number of elements
+                                    if (bobotArray.length !== 6) {
+                                        console.error('Bobot array does not have the correct number of elements.');
+                                        return;
+                                    }
+
+                                    // Calculate ECR
+                                    let ecr = (s * bobotArray[0]) + 
+                                            (l * bobotArray[1]) + 
+                                            (p * bobotArray[2]) + 
+                                            (e * bobotArray[3]) + 
+                                            (b * bobotArray[4]) + 
+                                            (h * bobotArray[5]);
+
+                                    // Calculate RR
+                                    let rr = ecr * r;
+
+                                    // Append ECR and RR to the formData
+                                    formData.append('ecr', ecr);
+                                    formData.append('rr', rr);
+
                                     fetch('{{ route('item2.store') }}', {
                                         method: 'POST',
                                         headers: {
@@ -1251,6 +1334,128 @@
                             function loadEditItemData(itemId) {
                                 // Ambil baris item berdasarkan ID
                                 const row = document.querySelector(`tr[data-id="${itemId}"]`);
+
+                                // Ambil data dari baris
+                                const itemName = row.querySelector('td:nth-child(5)').innerText;
+                                const itemNo = row.querySelector('td:nth-child(4)').innerText;
+                                const r = row.querySelector('td:nth-child(13)').innerText;
+                                const s = row.querySelector('td:nth-child(6)').innerText;
+                                const l = row.querySelector('td:nth-child(7)').innerText;
+                                const p = row.querySelector('td:nth-child(8)').innerText;
+                                const e = row.querySelector('td:nth-child(9)').innerText;
+                                const b = row.querySelector('td:nth-child(10)').innerText;
+                                const h = row.querySelector('td:nth-child(11)').innerText;
+
+                                // Isi data ke dalam form modal
+                                document.getElementById('editItemId').value = itemId;
+                                document.getElementById('editItemName').value = itemName;
+                                document.getElementById('editItemNo').value = itemNo;
+                                document.getElementById('editItemR').value = r;
+                                document.getElementById('editItemS').value = s;
+                                document.getElementById('editItemL').value = l;
+                                document.getElementById('editItemP').value = p;
+                                document.getElementById('editItemE').value = e;
+                                document.getElementById('editItemB').value = b;
+                                document.getElementById('editItemH').value = h;
+                            }
+
+                            // Fungsi untuk mengirim data yang telah diedit
+                            function submitEditItemForm() {
+                                // Ambil data dari form
+                                const itemId = document.getElementById('editItemId').value;
+                                const itemName = document.getElementById('editItemName').value;
+                                const itemNo = document.getElementById('editItemNo').value;
+                                const itemR = parseFloat(document.getElementById('editItemR').value);
+                                const itemS = parseFloat(document.getElementById('editItemS').value);
+                                const itemL = parseFloat(document.getElementById('editItemL').value);
+                                const itemP = parseFloat(document.getElementById('editItemP').value);
+                                const itemE = parseFloat(document.getElementById('editItemE').value);
+                                const itemB = parseFloat(document.getElementById('editItemB').value);
+                                const itemH = parseFloat(document.getElementById('editItemH').value);
+
+                                // Ambil nilai bobot dari tabel bobot
+                                let bobotArray = [];
+                                document.querySelectorAll('#bobotTableBody tr').forEach(bobotRow => {
+                                    const bobot = parseFloat(bobotRow.querySelector('td:nth-child(2)').innerText);
+                                    bobotArray.push(bobot);
+                                });
+
+                                // Pastikan bobotArray memiliki jumlah elemen yang benar
+                                if (bobotArray.length !== 6) {
+                                    console.error('Bobot array does not have the correct number of elements.');
+                                    return;
+                                }
+
+                                // Hitung nilai ECR
+                                let ecr = (itemS * bobotArray[0]) + (itemL * bobotArray[1]) + (itemP * bobotArray[2]) + (itemE * bobotArray[3]) + (itemB * bobotArray[4]) + (itemH * bobotArray[5]);
+
+                                // Hitung RR
+                                let rr = ecr * itemR;
+
+                                // Kirim data ke server
+                                fetch(`/item2/${itemId}/update`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        item_name: itemName,
+                                        item_no: itemNo,
+                                        item_r: itemR,
+                                        item_s: itemS,
+                                        item_l: itemL,
+                                        item_p: itemP,
+                                        item_e: itemE,
+                                        item_b: itemB,
+                                        item_h: itemH,
+                                        ecr: ecr,
+                                        rr: rr
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Item updated successfully!',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+
+                                        // Tutup modal
+                                        $('#editItemModal').modal('hide');
+
+                                        // Perbarui data di tabel jika perlu
+                                        // Misalnya, dengan memuat ulang tabel atau memperbarui baris yang relevan
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'An error occurred while updating the item.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while updating the item.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                });
+                            }
+
+
+
+                            // Fungsi untuk memuat data item ke dalam modal
+                            /* function loadEditItemData(itemId) {
+                                // Ambil baris item berdasarkan ID
+                                const row = document.querySelector(`tr[data-id="${itemId}"]`);
                         
                                 // Ambil data dari baris
                                 const itemName = row.querySelector('td:nth-child(5)').innerText;
@@ -1344,7 +1549,7 @@
                                         timer: 2000
                                     });
                                 });
-                            }
+                            } */
                         </script>
                         
 

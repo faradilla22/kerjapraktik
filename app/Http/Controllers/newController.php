@@ -262,7 +262,80 @@ public function updateValues4(Request $request)
 
 public function update($id, Request $request)
 {
+
+
     \Log::info('Update request received', [
+        'id' => $id,
+        'item_name' => $request->input('item_name'),
+        'item_no' => $request->input('item_no'),
+        'R' => $request->input('item_r'),
+        'S' => $request->input('item_s'),
+        'L' => $request->input('item_l'),
+        'P' => $request->input('item_p'),
+        'E' => $request->input('item_e'),
+        'B' => $request->input('item_b'),
+        'H' => $request->input('item_h')
+    ]);
+
+    try {
+        $barang = Barang::findOrFail($id);
+
+        // Validasi input
+        $validatedData = $request->validate([
+            'item_name' => 'required|string|max:255',
+            'item_no' => 'required|string|max:255',
+            'item_r' => 'required|numeric',
+            'item_s' => 'required|numeric',
+            'item_l' => 'required|numeric',
+            'item_p' => 'required|numeric',
+            'item_e' => 'required|numeric',
+            'item_b' => 'required|numeric',
+            'item_h' => 'required|numeric'
+        ]);
+
+        // Ambil nilai bobot dari database
+        $bobots = Bobot::all();
+        $bobotArray = $bobots->pluck('nilai_bobot')->toArray();
+
+        // Pastikan bobotArray memiliki jumlah elemen yang benar
+        if (count($bobotArray) !== 6) {
+            return response()->json(['error' => 'Bobot array does not have the correct number of elements.'], 500);
+        }
+
+        // Hitung nilai ECR
+        $ecr = ($validatedData['item_s'] * $bobotArray[0]) +
+               ($validatedData['item_l'] * $bobotArray[1]) +
+               ($validatedData['item_p'] * $bobotArray[2]) +
+               ($validatedData['item_e'] * $bobotArray[3]) +
+               ($validatedData['item_b'] * $bobotArray[4]) +
+               ($validatedData['item_h'] * $bobotArray[5]);
+
+        // Hitung RR
+        $rr = $ecr * $validatedData['item_r'];
+
+        // Update data barang
+        $barang->item_name = $validatedData['item_name'];
+        $barang->item_no = $validatedData['item_no'];
+        $barang->r = $validatedData['item_r'];
+        $barang->s = $validatedData['item_s'];
+        $barang->l = $validatedData['item_l'];
+        $barang->p = $validatedData['item_p'];
+        $barang->e = $validatedData['item_e'];
+        $barang->b = $validatedData['item_b'];
+        $barang->h = $validatedData['item_h'];
+        $barang->ecr = $ecr;
+        $barang->rr = $rr;
+        $barang->status = 'Modified Need Review';
+        $barang->save();
+
+        return response()->json(['success' => true]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error updating barang', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'An error occurred'], 500);
+    }
+    
+    /* \Log::info('Update request received', [
         'id' => $id,
         'item_name' => $request->input('item_name'),
         'item_no' => $request->input('item_no'),
@@ -316,7 +389,7 @@ public function update($id, Request $request)
     } catch (\Exception $e) {
         \Log::error('Error updating barang', ['error' => $e->getMessage()]);
         return response()->json(['error' => 'An error occurred'], 500);
-    }
+    } */
 }
 
 
@@ -379,7 +452,7 @@ public function changeStatus($id)
 
 public function store(Request $request)
 {
-    // Validasi data yang diterima
+   /*  // Validasi data yang diterima
     $validatedData = $request->validate([
         'item_name' => 'required|string|max:255',
         'item_no' => 'required|string|max:255',
@@ -435,6 +508,64 @@ public function store(Request $request)
 
 /*     return response()->json(['success' => true, 'barang' => $barang]);
  */    
+/*return redirect()->route('item2.index')->with('success', 'Data berhasil disimpan'); */
+
+// Validasi data yang diterima
+$validatedData = $request->validate([
+    'item_name' => 'required|string|max:255',
+    'item_no' => 'required|string|max:255',
+    'item_r' => 'required|numeric',
+    'item_s' => 'required|numeric',
+    'item_l' => 'required|numeric',
+    'item_p' => 'required|numeric',
+    'item_e' => 'required|numeric',
+    'item_b' => 'required|numeric',
+    'item_h' => 'required|numeric',
+]
+);
+
+// Ambil nilai id_pabrik dan id_bagian dari session
+$a = session('a', 1); // Default value 1 jika tidak ada dalam session
+$b = session('b', 1); // Default value 1 jika tidak ada dalam session
+
+// Ambil nilai bobot dari database
+$bobots = Bobot::all();
+$bobotArray = $bobots->pluck('nilai_bobot')->toArray();
+
+// Pastikan bobotArray memiliki jumlah elemen yang benar
+if (count($bobotArray) !== 6) {
+    return redirect()->route('item2.index')->with('error', 'Bobot array does not have the correct number of elements.');
+}
+
+// Hitung ECR
+$ecr = ($validatedData['item_s'] * $bobotArray[0]) +
+       ($validatedData['item_l'] * $bobotArray[1]) +
+       ($validatedData['item_p'] * $bobotArray[2]) +
+       ($validatedData['item_e'] * $bobotArray[3]) +
+       ($validatedData['item_b'] * $bobotArray[4]) +
+       ($validatedData['item_h'] * $bobotArray[5]);
+
+// Hitung RR
+$rr = $ecr * $validatedData['item_r'];
+
+// Simpan barang baru dengan ECR dan RR
+$barang = Barang::create([
+    'item_name' => $validatedData['item_name'],
+    'item_no' => $validatedData['item_no'],
+    'id_pabrik' => $a,
+    'id_bagian' => $b,
+    'ECR' => $ecr,
+    'RR' => $rr,
+    'status' => 'Created Need Review',
+    'R' => $validatedData['item_r'],
+    'S' => $validatedData['item_s'],
+    'L' => $validatedData['item_l'],
+    'P' => $validatedData['item_p'],
+    'E' => $validatedData['item_e'],
+    'B' => $validatedData['item_b'],
+    'H' => $validatedData['item_h'],
+]);
+
 return redirect()->route('item2.index')->with('success', 'Data berhasil disimpan');
 }
 
