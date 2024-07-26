@@ -211,9 +211,60 @@
                             </table>
                             {{ $bobots->links() }}
 
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="">
+                            {{-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="">
                             History Report
+                            </button> --}}
+
+
+                            <!-- Button to Open the Modal -->
+                            <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#historyReportModal">
+                                History Report
                             </button>
+
+                            <!-- The Modal -->
+                            <div class="modal fade" id="historyReportModal" tabindex="-1" role="dialog" aria-labelledby="historyReportModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="historyReportModalLabel">History Report Ammonia P2B</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Tanggal Terbit</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>24-07-09</td>
+                                                        <td><a href="#">Download</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>23-07-19</td>
+                                                        <td><a href="#">Download</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>22-07-10</td>
+                                                        <td><a href="#">Download</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-custom" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         
 
                             
@@ -309,7 +360,7 @@
                                 </div>
                             </div> --}}
 
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahItemModal">
+                            <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#tambahItemModal">
                                 Tambah Item
                             </button>
                         
