@@ -11,6 +11,53 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        // Handler untuk tombol Trends
+        $('#itemTableBody').on('click', '.btn-trends', function() {
+            const id_barang = $(this).data('id');
+            loadTrends(id_barang);
+        });
+    });
+
+
+        function loadTrends(id_barang) {
+            $.ajax({
+                url: `/item2/${id_barang}/trends`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    if(response.trends) {
+                        const trends = response.trends;
+                        let trendsHtml = '';
+                        if (trends.length > 0) {
+                            $.each(trends, function(index, trend) {
+                                trendsHtml += `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${trend.timestamp}</td>
+                                    <td>${trend.R}</td>
+                                </tr>`;
+                            });
+                        } else {
+                            trendsHtml = '<tr><td colspan="3">No trends available</td></tr>';
+                        }
+                        $('#trendsTable tbody').html(trendsHtml);
+                        $('#trendModal').modal('show');
+                    } else {
+                        alert('No data found');
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert('Error fetching data');
+                }
+            });
+        }
+    </script>
+
+
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -325,7 +372,7 @@
                                         <!-- <a href="#" class="btn btn-md btn-success mb-3">Edit/a>
                                         <a href="#" class="btn btn-md btn-danger mb-3">Hapus</a> -->
                                         
-                                        <a href="#" class="btn btn-md btn-warning text-white mb-3">Trend</a>
+                                        <button class="btn btn-md btn-warning text-white mb-3 btn-trends" data-id="{{ $items->id }}" data-toggle="modal" data-target="#trendModal">Trends</button>
                                         </td>
 
                                        
@@ -339,6 +386,33 @@
                             @endforeach
                             </tbody>
                         </table>
+
+                        <div class="modal fade" id="trendModal" tabindex="-1" role="dialog" aria-labelledby="trendModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="trendModalLabel">Trend Data</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table" id="trendsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Last Update</th>
+                                                    <th>R</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data akan ditambahkan di sini melalui AJAX -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Modal Reject -->
                        {{--  <div class="modal fade" id="rejectItem" tabindex="-1" role="dialog" aria-labelledby="rejectItemLabel" aria-hidden="true">
