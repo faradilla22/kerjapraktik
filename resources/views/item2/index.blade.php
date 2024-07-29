@@ -13,14 +13,13 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-        // Handler untuk tombol Trends
-        $('#itemTableBody').on('click', '.btn-trends', function() {
-            const id_barang = $(this).data('id');
-            loadTrends(id_barang);
+       $(document).ready(function() {
+            // Handler untuk tombol Trends
+            $('#itemTableBody').on('click', '.btn-trends', function() {
+                const id_barang = $(this).data('id');
+                loadTrends(id_barang);
+            });
         });
-    });
-
 
         function loadTrends(id_barang) {
             $.ajax({
@@ -34,9 +33,11 @@
                         let trendsHtml = '';
                         if (trends.length > 0) {
                             $.each(trends, function(index, trend) {
+                                const date = new Date(trend.updated_at);
+                                const formattedDate = date.toLocaleDateString();
                                 trendsHtml += `<tr>
                                     <td>${index + 1}</td>
-                                    <td>${trend.timestamp}</td>
+                                    <td>${trend.formattedDate}</td>
                                     <td>${trend.R}</td>
                                 </tr>`;
                             });
@@ -56,7 +57,7 @@
             });
         }
     </script>
-
+    
     <style>
         .modal-body input, .modal-body textarea {
             width: 100%; /* Mengatur lebar input box menjadi 100% dari container */
@@ -1552,6 +1553,53 @@
                             } */
                         </script>
                         
+                        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script>
+        $(document).ready(function() {
+        // Handler untuk tombol Trends
+        $('#itemTableBody').on('click', '.btn-trends', function() {
+            const id_barang = $(this).data('id');
+            loadTrends(id_barang);
+        });
+    });
+
+            function loadTrends(id_barang) {
+            $.ajax({
+                url: `/item2/${id_barang}/trends`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    if(response.trends) {
+                        const trends = response.trends;
+                        let trendsHtml = '';
+                        if (trends.length > 0) {
+                            $.each(trends, function(index, trend) {
+                                const date = new Date(trend.updated_at);
+                                const formattedDate = date.toLocaleDateString();
+                                trendsHtml += `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${formattedDate}</td>
+                                    <td>${trend.R}</td>
+                                </tr>`;
+                            });
+                        } else {
+                            trendsHtml = '<tr><td colspan="3">No trends available</td></tr>';
+                        }
+                        $('#trendsTable tbody').html(trendsHtml);
+                        $('#trendModal').modal('show');
+                    } else {
+                        alert('No data found');
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert('Error fetching data');
+                }
+            });
+        }
+    </script>
+    </script>
 
 
                         {{-- <script>
@@ -1637,7 +1685,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
