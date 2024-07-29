@@ -71,3 +71,4 @@ Route::post('/item/{id}/reject', [newController::class, 'reject'])->name('item.r
 
 
 Route::get('/item2/{id_barang}/trends', [newController::class, 'getTrends'])->name('item2.trends');
+Route::get('/item/{id_barang}/trends', [newController::class, 'getTrends'])->name('item.trends');
